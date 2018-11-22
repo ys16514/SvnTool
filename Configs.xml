@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <!-- 主干的路径 -->
+    <trunkServer1>E:\Fever_Basketball\Trunk\FB_Beta\Server_CHN\</trunkServer1>
+    <trunkServer2>E:\Fever_Basketball\Trunk\FB_Beta\Server_CHN_2\</trunkServer2>
+    <trunkClient>E:\Fever_Basketball\Trunk\FB\Assets\</trunkClient>
+    <!--<trunkConfig>E:\Fever_Basketball\Trunk\FB\Assets\LuaFramework\Lua\Custom\Config\Config.lua</trunkConfig>-->
+    <trunkConfig>Lua\Config.lua</trunkConfig>
+    <trunkExcel>E:\Fever_Basketball\Trunk\FB\Tool Config\Excel\</trunkExcel>
+    <!--<trunkText>E:\Fever_Basketball\Trunk\FB_Beta\Server_CHN\func_server\routes\text\</trunkText>-->
+    <trunkText>\Users\jingdu\Desktop\SYD\text\</trunkText>
+
+
+    <!-- 线上分支的路径 -->
+    <currentServer1>E:\Fever_Basketball\DK_Branch\Server_1\</currentServer1>
+    <currentServer2>E:\Fever_Basketball\DK_Branch\Server_2\</currentServer2>
+    <currentClient>E:\Fever_Basketball\DK_Branch\Client\Assets</currentClient>
+    <currentConfig>E:\Fever_Basketball\DK_Branch\Client\Assets\LuaFramework\Lua\Custom\Config\Config.lua</currentConfig>
+    <currentExcel>E:\Fever_Basketball\DK_Branch\Client\Tool Config\Excel\</currentExcel>
+    <currentText>E:\Fever_Basketball\DK_Branch\Server_1\func_server\routes\text\</currentText>
+
+    <!-- 提审分支的路径 -->
+    <nextServer1>E:\Fever_Basketball\ATM_Branch\Server_1\</nextServer1>
+    <nextServer2>E:\Fever_Basketball\ATM_Branch\Server_2\</nextServer2>
+    <nextClient>E:\Fever_Basketball\ATM_Branch\Client\Assets</nextClient>
+    <nextConfig>E:\Fever_Basketball\ATM_Branch\Client\Assets\LuaFramework\Lua\Custom\Config\Config.lua</nextConfig>
+    <nextExcel>E:\Fever_Basketball\ATM_Branch\Client\Tool Config\Excel\</nextExcel>
+    <nextText>E:\Fever_Basketball\ATM_Branch\Server_1\func_server\routes\text\</nextText>
+</config>
