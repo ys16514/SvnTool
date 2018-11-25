@@ -19,25 +19,15 @@ def getDictFromXML():
         if trunkServer2.childNodes:
             configs['trunkServer2'] = trunkServer2.childNodes[0].data
 
-    if domTree.documentElement.getElementsByTagName('trunkClient'):
-        trunkClient = domTree.documentElement.getElementsByTagName('trunkClient')[0]
-        if trunkClient.childNodes:
-            configs['trunkClient'] = trunkClient.childNodes[0].data
-
-    if domTree.documentElement.getElementsByTagName('trunkConfig'):
-        trunkConfig = domTree.documentElement.getElementsByTagName('trunkConfig')[0]
-        if trunkConfig.childNodes:
-            configs['trunkConfig'] = trunkConfig.childNodes[0].data
+    if domTree.documentElement.getElementsByTagName('trunkAsset'):
+        trunkAsset = domTree.documentElement.getElementsByTagName('trunkAsset')[0]
+        if trunkAsset.childNodes:
+            configs['trunkAsset'] = trunkAsset.childNodes[0].data
 
     if domTree.documentElement.getElementsByTagName('trunkExcel'):
         trunkExcel = domTree.documentElement.getElementsByTagName('trunkExcel')[0]
         if trunkExcel.childNodes:
             configs['trunkExcel'] = trunkExcel.childNodes[0].data
-
-    if domTree.documentElement.getElementsByTagName('trunkText'):
-        trunkText = domTree.documentElement.getElementsByTagName('trunkText')[0]
-        if trunkText.childNodes:
-            configs['trunkText'] = trunkText.childNodes[0].data
     # </editor-fold>
 
     # <editor-fold desc="Current path">
@@ -51,25 +41,15 @@ def getDictFromXML():
         if currentServer2.childNodes:
             configs['currentServer2'] = currentServer2.childNodes[0].data
 
-    if domTree.documentElement.getElementsByTagName('currentClient'):
-        currentClient = domTree.documentElement.getElementsByTagName('currentClient')[0]
-        if currentClient.childNodes:
-            configs['currentClient'] = currentClient.childNodes[0].data
-
-    if domTree.documentElement.getElementsByTagName('currentConfig'):
-        currentConfig = domTree.documentElement.getElementsByTagName('currentConfig')[0]
-        if currentConfig.childNodes:
-            configs['currentConfig'] = currentConfig.childNodes[0].data
+    if domTree.documentElement.getElementsByTagName('currentAsset'):
+        currentAsset = domTree.documentElement.getElementsByTagName('currentAsset')[0]
+        if currentAsset.childNodes:
+            configs['currentAsset'] = currentAsset.childNodes[0].data
 
     if domTree.documentElement.getElementsByTagName('currentExcel'):
         currentExcel = domTree.documentElement.getElementsByTagName('currentExcel')[0]
         if currentExcel.childNodes:
             configs['currentExcel'] = currentExcel.childNodes[0].data
-
-    if domTree.documentElement.getElementsByTagName('currentText'):
-        currentText = domTree.documentElement.getElementsByTagName('currentText')[0]
-        if currentText.childNodes:
-            configs['currentText'] = currentText.childNodes[0].data
     # </editor-fold>
 
     # <editor-fold desc="Next path">
@@ -83,25 +63,15 @@ def getDictFromXML():
         if nextServer2.childNodes:
             configs['nextServer2'] = nextServer2.childNodes[0].data
 
-    if domTree.documentElement.getElementsByTagName('nextClient'):
-        nextClient = domTree.documentElement.getElementsByTagName('nextClient')[0]
-        if nextClient.childNodes:
-            configs['nextClient'] = nextClient.childNodes[0].data
-
-    if domTree.documentElement.getElementsByTagName('nextConfig'):
-        nextConfig = domTree.documentElement.getElementsByTagName('nextConfig')[0]
-        if nextConfig.childNodes:
-            configs['nextConfig'] = nextConfig.childNodes[0].data
+    if domTree.documentElement.getElementsByTagName('nextAsset'):
+        nextAsset = domTree.documentElement.getElementsByTagName('nextAsset')[0]
+        if nextAsset.childNodes:
+            configs['nextAsset'] = nextAsset.childNodes[0].data
 
     if domTree.documentElement.getElementsByTagName('nextExcel'):
         nextExcel = domTree.documentElement.getElementsByTagName('nextExcel')[0]
         if nextExcel.childNodes:
             configs['nextExcel'] = nextExcel.childNodes[0].data
-
-    if domTree.documentElement.getElementsByTagName('nextText'):
-        nextText = domTree.documentElement.getElementsByTagName('nextText')[0]
-        if nextText.childNodes:
-            configs['nextText'] = nextText.childNodes[0].data
     # </editor-fold>
 
     return configs
