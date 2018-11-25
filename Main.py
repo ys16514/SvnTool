@@ -4,6 +4,7 @@ import tkinter
 from tkinter import messagebox
 import SvnUtils
 import XMLParse
+import ServerBoost
 
 
 class SvnTool(object):
@@ -29,17 +30,28 @@ class SvnTool(object):
         self.revertButton = tkinter.Button(self.root, text="Revert", command=self.revertCall)
         # 启动按钮
         self.boostButton = tkinter.Button(self.root, text="Boost", command=self.boostCall)
+        pass
 
     def elementArrange(self):
         self.choice1.grid(row=1, column=0, sticky=tkinter.W, padx=10, ipady=8)
         self.choice2.grid(row=2, column=0, sticky=tkinter.W, padx=10, ipady=8)
         self.choice3.grid(row=3, column=0, sticky=tkinter.W, padx=10, ipady=8)
-        self.updateButton.grid(row=1, column=2,  padx=20)
+        self.updateButton.grid(row=1, column=2, padx=20)
         self.revertButton.grid(row=2, column=2, padx=20)
         self.boostButton.grid(row=3, column=2, padx=20)
 
-    def boostCall(self):
-        pass
+    def updateCall(self):
+        try:
+            if self.version.get() == 1:
+                self.update(1)
+            elif self.version.get() == 2:
+                self.update(2)
+            elif self.version.get() == 3:
+                self.update(3)
+            else:
+                messagebox.showwarning("Warning", "请先选择一个Branch")
+        except Exception as e:
+            messagebox.showerror("Error", str(e))
 
     def revertCall(self):
         try:
@@ -54,18 +66,19 @@ class SvnTool(object):
         except Exception as e:
             messagebox.showerror("Error", str(e))
 
-    def updateCall(self):
+    def boostCall(self):
         try:
             if self.version.get() == 1:
-                self.update(1)
+                self.boost(1)
             elif self.version.get() == 2:
-                self.update(2)
+                self.boost(2)
             elif self.version.get() == 3:
-                self.update(3)
+                self.boost(3)
             else:
-                messagebox.showwarning("Warning", "请先选择一个Branch")
+                messagebox.showwarning("Warning", "请先选择一个Branch！")
         except Exception as e:
             messagebox.showerror("Error", str(e))
+        pass
 
     def update(self, version):
         self.getPathFromXML(version)
@@ -82,6 +95,11 @@ class SvnTool(object):
             SvnUtils.revert(self.excelPath, True)
             SvnUtils.revert(self.server1Path, True)
             SvnUtils.revert(self.server2Path, True)
+
+    def boost(self, version):
+        self.getPathFromXML(version)
+        ServerBoost.serverBoost(self.server1Path)
+        pass
 
     def getPathFromXML(self, version):
         self.configs = XMLParse.getDictFromXML()
@@ -113,6 +131,9 @@ class SvnTool(object):
                 self.server2Path = self.configs['nextServer2']
             if 'nextExcel' in self.configs.keys():
                 self.excelPath = self.configs['nextExcel']
+        pass
+
+    pass
 
 
 def main():
