@@ -7,17 +7,17 @@
     <trunkServer1>E:\Fever_Basketball\Trunk\FB_Beta\Server_CHN\</trunkServer1>
     <trunkServer2>E:\Fever_Basketball\Trunk\FB_Beta\Server_CHN_2\</trunkServer2>
     <trunkAsset>E:\Fever_Basketball\Trunk\FB\Assets\</trunkAsset>
-    <trunkExcel>E:\Fever_Basketball\Trunk\FB\Tool Config\Excel\</trunkExcel>
+    <trunkExcel>E:\Fever_Basketball\Trunk\FB\Tool Configer\Excel\</trunkExcel>
 
     <!-- 线上分支的路径 -->
     <currentServer1>E:\Fever_Basketball\DK_Branch\Server_1\</currentServer1>
     <currentServer2>E:\Fever_Basketball\DK_Branch\Server_2\</currentServer2>
-    <currentAsset>E:\Fever_Basketball\DK_Branch\Client\Assets</currentAsset>
-    <currentExcel>E:\Fever_Basketball\DK_Branch\Client\Tool Config\Excel\</currentExcel>
+    <currentAsset>E:\Fever_Basketball\DK_Branch\Client\Assets\</currentAsset>
+    <currentExcel>E:\Fever_Basketball\DK_Branch\Client\Tool Configer\Excel\</currentExcel>
 
     <!-- 提审分支的路径 -->
     <nextServer1>E:\Fever_Basketball\ATM_Branch\Server_1\</nextServer1>
     <nextServer2>E:\Fever_Basketball\ATM_Branch\Server_2\</nextServer2>
-    <nextAsset>E:\Fever_Basketball\ATM_Branch\Client\Assets</nextAsset>
-    <nextExcel>E:\Fever_Basketball\ATM_Branch\Client\Tool Config\Excel\</nextExcel>
+    <nextAsset>E:\Fever_Basketball\ATM_Branch\Client\Assets\</nextAsset>
+    <nextExcel>E:\Fever_Basketball\ATM_Branch\Client\Tool Configer\Excel\</nextExcel>
 </config>

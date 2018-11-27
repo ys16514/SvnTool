@@ -11,7 +11,7 @@ class SvnTool(object):
     def __init__(self):
         self.root = tkinter.Tk()
         self.root.title("SvnTool")
-        self.root.geometry('200x120')
+        self.root.geometry('300x140')
         self.version = tkinter.IntVar()
         self.configs = {}
         self.assetPath = ''
@@ -25,29 +25,32 @@ class SvnTool(object):
         self.choice3 = tkinter.Radiobutton(self.root, text="提审分支", variable=self.version, value=3)
 
         # 更新按钮
-        self.updateButton = tkinter.Button(self.root, text="Update", command=self.updateCall)
+        self.updateButton = tkinter.Button(self.root, text="更  新", command=self.updateCall)
         # 回退按钮
-        self.revertButton = tkinter.Button(self.root, text="Revert", command=self.revertCall)
+        self.revertButton = tkinter.Button(self.root, text="回退本地修改", command=self.revertCall)
         # 启动按钮
-        self.boostButton = tkinter.Button(self.root, text="Boost", command=self.boostCall)
+        # self.boostButton = tkinter.Button(self.root, text="Boost", command=self.boostCall)
         pass
 
     def elementArrange(self):
-        self.choice1.grid(row=1, column=0, sticky=tkinter.W, padx=10, ipady=8)
-        self.choice2.grid(row=2, column=0, sticky=tkinter.W, padx=10, ipady=8)
-        self.choice3.grid(row=3, column=0, sticky=tkinter.W, padx=10, ipady=8)
-        self.updateButton.grid(row=1, column=2, padx=20)
-        self.revertButton.grid(row=2, column=2, padx=20)
-        self.boostButton.grid(row=3, column=2, padx=20)
+        self.choice1.grid(row=1, column=0, sticky=tkinter.W, padx=40, ipady=8)
+        self.choice2.grid(row=2, column=0, sticky=tkinter.W, padx=40, ipady=8)
+        self.choice3.grid(row=3, column=0, sticky=tkinter.W, padx=40, ipady=8)
+        self.updateButton.grid(row=1, column=2, padx=40)
+        self.revertButton.grid(row=3, column=2, padx=40)
+        # self.boostButton.grid(row=3, column=2, padx=40)
 
     def updateCall(self):
         try:
             if self.version.get() == 1:
                 self.update(1)
+                messagebox.showinfo("Done", "更新完成")
             elif self.version.get() == 2:
                 self.update(2)
+                messagebox.showinfo("Done", "更新完成")
             elif self.version.get() == 3:
                 self.update(3)
+                messagebox.showinfo("Done", "更新完成")
             else:
                 messagebox.showwarning("Warning", "请先选择一个Branch")
         except Exception as e:
@@ -57,10 +60,13 @@ class SvnTool(object):
         try:
             if self.version.get() == 1:
                 self.revert(1)
+                messagebox.showinfo("Done", "回退完成")
             elif self.version.get() == 2:
                 self.revert(2)
+                messagebox.showinfo("Done", "回退完成")
             elif self.version.get() == 3:
                 self.revert(3)
+                messagebox.showinfo("Done", "回退完成")
             else:
                 messagebox.showwarning("Warning", "请先选择一个Branch！")
         except Exception as e:
@@ -70,10 +76,13 @@ class SvnTool(object):
         try:
             if self.version.get() == 1:
                 self.boost(1)
+                messagebox.showinfo("Done", "启动成功")
             elif self.version.get() == 2:
                 self.boost(2)
+                messagebox.showinfo("Done", "启动成功")
             elif self.version.get() == 3:
                 self.boost(3)
+                messagebox.showinfo("Done", "启动成功")
             else:
                 messagebox.showwarning("Warning", "请先选择一个Branch！")
         except Exception as e:
@@ -82,19 +91,13 @@ class SvnTool(object):
 
     def update(self, version):
         self.getPathFromXML(version)
-        SvnUtils.update(self.assetPath, True)
-        SvnUtils.update(self.excelPath, True)
-        SvnUtils.update(self.server1Path, True)
-        SvnUtils.update(self.server2Path, True)
+        SvnUtils.update(self.assetPath, self.excelPath, self.server1Path, self.server2Path, True)
 
     def revert(self, version):
         flag = messagebox.askyesno("Warning", "确定回退本地的修改吗？")
         if flag:
             self.getPathFromXML(version)
-            SvnUtils.revert(self.assetPath, True)
-            SvnUtils.revert(self.excelPath, True)
-            SvnUtils.revert(self.server1Path, True)
-            SvnUtils.revert(self.server2Path, True)
+            SvnUtils.revert(self.assetPath, self.excelPath, self.server1Path, self.server2Path, True)
 
     def boost(self, version):
         self.getPathFromXML(version)

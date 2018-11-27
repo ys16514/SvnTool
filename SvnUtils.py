@@ -2,28 +2,35 @@
 # coding=UTF8
 import os
 
-exePath = 'svn'
+dirChange = 'cd svnDir'
+exePath = 'svn.exe'
 
 
-def update(originPath, doUpdate=False):
-    if os.path.exists(originPath):
+def update(assetPath, excelPath, server1Path, server2Path, doUpdate=False):
+    if os.path.exists(assetPath) and os.path.exists(excelPath) and os.path.exists(server1Path) and os.path.exists(server2Path):
         if (doUpdate):
-            path = '"' + originPath + '"'
-            command = exePath + " update " + path
+            command = dirChange + ' && ' +\
+                      exePath + " update " + '"' + assetPath + '\\"' + ' && ' +\
+                      exePath + " update " + '"' + excelPath + '\\"' + ' && ' + \
+                      exePath + " update " + '"' + server1Path + '\\"' + ' && ' + \
+                      exePath + " update " + '"' + server2Path + '\\"' + ' && pause'
             if not os.system(command) == 0:
                 raise Exception("Svn Error!", "error in svn update")
     else:
-        err = 'The path of %s not exist' % originPath
+        err = 'The path not exist'
         raise Exception("Path Error!", err)
 
 
-def revert(originPath, doRevert=False):
-    if os.path.exists(originPath):
+def revert(assetPath, excelPath, server1Path, server2Path, doRevert=False):
+    if os.path.exists(assetPath) and os.path.exists(excelPath) and os.path.exists(server1Path) and os.path.exists(server2Path):
         if (doRevert):
-            path = '"' + originPath + '"'
-            command = exePath + " revert -R " + path
+            command = dirChange + ' && ' +\
+                      exePath + " revert -R " + '"' + assetPath + '\\"' + ' && ' +\
+                      exePath + " revert -R " + '"' + excelPath + '\\"' + ' && ' + \
+                      exePath + " revert -R " + '"' + server1Path + '\\"' + ' && ' + \
+                      exePath + " revert -R " + '"' + server2Path + '\\"' + ' && pause'
             if not os.system(command) == 0:
                 raise Exception("Svn Error!", "error in svn revert")
     else:
-        err = 'The path of %s not exist' % originPath
+        err = 'The path not exist'
         raise Exception("Path Error!", err)
