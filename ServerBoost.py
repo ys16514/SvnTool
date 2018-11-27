@@ -1,4 +1,5 @@
 import os
+import subprocess
 
 redisCommand = "redis-server.exe redis.conf --maxheap 200m"
 funcCommand = "node gas_func"
@@ -9,33 +10,33 @@ toolCommand = "node gas_tool"
 redisPath = 'db\\'
 funcPath = 'func_server\\'
 chatPath = 'chat_server\\'
-toolPath = 'tool_server\\'
+toolPath = 'gm_tool_server\\'
 
 
 def run(command):
-    if not os.system(command) == 0:
-        raise Exception("ServerBoost Error!", "error in %s" % command)
+    subprocess.Popen(command)
 
 
-def serverBoost(serverPath):
-    disk = serverPath.split('\\')[0]
+def serverBoost(server1Path, server2Path):
+    localPath = os.getcwd()
 
-    redisCmd = disk + " && " + "cd " + serverPath + redisPath + " && " + redisCommand
-    run(redisCmd)
-    # print(redisCmd)
+    os.chdir(server1Path + redisPath)
+    run(redisCommand)
 
-    funcCmd = disk + " && " + "cd " + serverPath + funcPath + " && " + funcCommand
-    run(funcCmd)
-    # print(funcCmd)
+    if server2Path != '':
+        os.chdir(server2Path + redisPath)
+        run(redisCommand)
 
-    matchCmd = disk + " && " + "cd " + serverPath + funcPath + " && " + matchCommand
-    run(matchCmd)
-    # print(matchCmd)
+    os.chdir(server1Path + funcPath)
+    run(funcCommand)
 
-    chatCmd = disk + " && " + "cd " + serverPath + chatPath + " && " + chatCommand
-    run(chatCmd)
-    # print(chatCmd)
+    os.chdir(server1Path + funcPath)
+    run(matchCommand)
 
-    toolCmd = disk + " && " + "cd " + serverPath + toolPath + " && " + toolCommand
-    run(toolCmd)
-    # print(toolCmd)
+    os.chdir(server1Path + chatPath)
+    run(chatCommand)
+
+    os.chdir(server1Path + toolPath)
+    run(toolCommand)
+
+    os.chdir(localPath)
