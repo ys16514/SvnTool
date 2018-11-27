@@ -2,6 +2,7 @@
 # coding=UTF8
 import tkinter
 from tkinter import messagebox
+from tkinter import ttk
 import SvnUtils
 import XMLParse
 import ServerBoost
@@ -11,8 +12,11 @@ class SvnTool(object):
     def __init__(self):
         self.root = tkinter.Tk()
         self.root.title("SvnTool")
-        self.root.geometry('300x140')
+        self.root.geometry('500x540')
         self.version = tkinter.IntVar()
+        self.year = tkinter.IntVar()
+        self.month = tkinter.IntVar()
+        self.day = tkinter.IntVar()
         self.configs = {}
         self.assetPath = ''
         self.excelPath = ''
@@ -30,6 +34,15 @@ class SvnTool(object):
         self.revertButton = tkinter.Button(self.root, text="回退本地修改", command=self.revertCall)
         # 启动按钮
         # self.boostButton = tkinter.Button(self.root, text="Boost", command=self.boostCall)
+        # 年份下拉列表
+        self.yearCombo = ttk.Combobox(self.root, textvariable=self.year)
+        self.yearCombo['value'] = (2018, 2019, 2020, 2021, 2022)
+        # 月份下拉列表
+        self.monthCombo = ttk.Combobox(self.root, textvariable=self.month)
+        self.monthCombo['value'] = (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12)
+        # 天数下拉列表
+        self.dayCombo = ttk.Combobox(self.root, textvariable=self.day)
+        self.dayCombo['value'] = (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30)
         pass
 
     def elementArrange(self):
@@ -39,6 +52,9 @@ class SvnTool(object):
         self.updateButton.grid(row=1, column=2, padx=40)
         self.revertButton.grid(row=3, column=2, padx=40)
         # self.boostButton.grid(row=3, column=2, padx=40)
+        self.yearCombo.grid(row=4, column=1)
+        self.monthCombo.grid(row=5, column=1)
+        self.dayCombo.grid(row=6, column=1)
 
     def updateCall(self):
         try:
