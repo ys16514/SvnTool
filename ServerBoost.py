@@ -52,17 +52,32 @@ def localFlush(server1Path, server2Path):
     os.chdir(localPath)
 
 
-def serverBoost(server1Path, server2Path):
+def redisBoost(server1Path, server2Path):
     localPath = os.getcwd()
 
     # 启动 1 服 Redis
     os.chdir(server1Path + redisPath)
     run(redisCommand)
 
-    # 启动 2 服 Redis, func, match, chat
     if server2Path != '':
         os.chdir(server2Path + redisPath)
         run(redisCommand)
+
+    # 工作路径还原
+    os.chdir(localPath)
+
+
+def serverBoost(server1Path, server2Path):
+    localPath = os.getcwd()
+
+    # 启动 1 服 Redis
+    # os.chdir(server1Path + redisPath)
+    # run(redisCommand)
+
+    # 启动 2 服 Redis, func, match, chat
+    if server2Path != '':
+        # os.chdir(server2Path + redisPath)
+        # run(redisCommand)
 
         os.chdir(server2Path + funcPath)
         run(funcCommand)

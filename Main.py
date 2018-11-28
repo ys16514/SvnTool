@@ -39,7 +39,7 @@ class SvnTool(object):
         # 关服按钮
         self.shutButton = tkinter.Button(self.root, text="一键关闭", command=self.shutCall)
         # 待定按钮
-        self.xxxButton = tkinter.Button(self.root, text="敬请期待..")
+        self.redisButton = tkinter.Button(self.root, text="启动DB", command=self.redisCall)
         # 年份下拉列表
         # self.yearCombo = ttk.Combobox(self.root, textvariable=self.year)
         # self.yearCombo['value'] = (2018, 2019, 2020, 2021, 2022)
@@ -59,8 +59,8 @@ class SvnTool(object):
         self.revertButton.grid(row=1, column=3, padx=10)
         self.boostButton.grid(row=2, column=2, padx=20)
         self.shutButton.grid(row=2, column=3, padx=20)
-        self.flushButton.grid(row=3, column=2, padx=20)
-        self.xxxButton.grid(row=3, column=3, padx=20)
+        self.flushButton.grid(row=3, column=3, padx=20)
+        self.redisButton.grid(row=3, column=2, padx=20)
         # self.yearCombo.grid(row=4, column=1)
         # self.monthCombo.grid(row=5, column=1)
         # self.dayCombo.grid(row=6, column=1)
@@ -99,7 +99,7 @@ class SvnTool(object):
 
     def boostCall(self):
         try:
-            SystemUtils.killProcess()
+            SystemUtils.killServerProcess()
             if self.version.get() == 1:
                 self.boost(1)
                 # messagebox.showinfo("Done", "启动成功")
@@ -135,8 +135,22 @@ class SvnTool(object):
         pass
 
     def shutCall(self):
-        SystemUtils.killProcess()
+        SystemUtils.killAllProcess()
         pass
+
+    def redisCall(self):
+        try:
+            SystemUtils.killDbProcess()
+            if self.version.get() == 1:
+                self.redisBoost(1)
+            elif self.version.get() == 2:
+                self.redisBoost(2)
+            elif self.version.get() == 3:
+                self.redisBoost(3)
+            else:
+                messagebox.showwarning("Warning", "请先选择一个Branch！")
+        except Exception as e:
+            messagebox.showerror("Error", str(e))
 
     def update(self, version):
         self.getPathFromXML(version)
@@ -156,6 +170,10 @@ class SvnTool(object):
     def flush(self, version):
         self.getPathFromXML(version)
         ServerBoost.localFlush(self.server1Path, self.server2Path)
+
+    def redisBoost(self, version):
+        self.getPathFromXML(version)
+        ServerBoost.redisBoost(self.server1Path, self.server2Path)
 
     def getPathFromXML(self, version):
         self.configs = XMLParse.getDictFromXML()
