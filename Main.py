@@ -178,7 +178,7 @@ class SvnTool(object):
         elif version == 2:
             if 'currentAsset' in self.configs.keys():
                 self.assetPath = self.configs['currentAsset']
-            if 'currentServer1' in self.configs.keys():
+            if 'currentServer' in self.configs.keys():
                 self.serverPaths = self.configs['currentServer']
             if 'currentExcel' in self.configs.keys():
                 self.excelPath = self.configs['currentExcel']
