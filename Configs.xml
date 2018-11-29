@@ -1,23 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- 1. 路径结尾的 \ 不能省略 -->
-<!-- 2. 不存在的路径可以不填，形如：<trunkServer2></trunkServer2> -->
+<!-- 2. 不存在的 server 路径可以删除，如删除：<server2>E:\Fever_Basketball\Trunk\FB_Beta\Server_CHN_2\</server2> -->
 <!-- 3. <...>标签的名称不能修改 -->
 <config>
     <!-- 主干的路径 -->
-    <trunkServer1>E:\Fever_Basketball\Trunk\FB_Beta\Server_CHN\</trunkServer1>
-    <trunkServer2>E:\Fever_Basketball\Trunk\FB_Beta\Server_CHN_2\</trunkServer2>
+    <trunkServer>
+        <server1>E:\Fever_Basketball\Trunk\FB_Beta\Server_CHN\</server1>
+        <server2>E:\Fever_Basketball\Trunk\FB_Beta\Server_CHN_2\</server2>
+    </trunkServer>
     <trunkAsset>E:\Fever_Basketball\Trunk\FB\Assets\</trunkAsset>
     <trunkExcel>E:\Fever_Basketball\Trunk\FB\Tool Configer\Excel\</trunkExcel>
 
     <!-- 线上分支的路径 -->
-    <currentServer1>E:\Fever_Basketball\DK_Branch\Server_1\</currentServer1>
-    <currentServer2>E:\Fever_Basketball\DK_Branch\Server_2\</currentServer2>
+    <currentServer>
+        <server1>E:\Fever_Basketball\DK_Branch\Server_1\</server1>
+        <server2>E:\Fever_Basketball\DK_Branch\Server_2\</server2>
+    </currentServer>
     <currentAsset>E:\Fever_Basketball\DK_Branch\Client\Assets\</currentAsset>
     <currentExcel>E:\Fever_Basketball\DK_Branch\Client\Tool Configer\Excel\</currentExcel>
 
     <!-- 提审分支的路径 -->
-    <nextServer1>E:\Fever_Basketball\ATM_Branch\Server_1\</nextServer1>
-    <nextServer2>E:\Fever_Basketball\ATM_Branch\Server_2\</nextServer2>
+    <nextServer>
+        <nextServer1>E:\Fever_Basketball\ATM_Branch\Server_1\</nextServer1>
+        <nextServer2>E:\Fever_Basketball\ATM_Branch\Server_2\</nextServer2>
+    </nextServer>
     <nextAsset>E:\Fever_Basketball\ATM_Branch\Client\Assets\</nextAsset>
     <nextExcel>E:\Fever_Basketball\ATM_Branch\Client\Tool Configer\Excel\</nextExcel>
 </config>

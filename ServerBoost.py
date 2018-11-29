@@ -20,89 +20,67 @@ def run(command):
     subprocess.Popen(command)
 
 
-def localFlush(server1Path, server2Path):
+def localFlush(serverPaths):
     localPath = os.getcwd()
 
-    port1, port2 = '', ''
+    ports = []
     serverList = []
 
-    # 获取 Redis 端口号
-    os.chdir(server1Path + funcPath)
-    with open('GameConfig.json', 'rb') as f:
-        gameConfig = json.load(f)
+    if len(serverPaths) > 0 and os.path.exists(serverPaths[0]):
 
-    if 'server_list' in gameConfig.keys():
-        serverList = gameConfig['server_list']
-    if len(serverList) == 2:
-        port1 = serverList[0]['redis_port']
-        port2 = serverList[1]['redis_port']
-    if len(serverList) == 1:
-        port1 = serverList[0]['redis_port']
+        os.chdir(serverPaths[0] + funcPath)
+        with open('GameConfig.json', 'rb') as f:
+            gameConfig = json.load(f)
 
-    # 1服清档
-    os.chdir(server1Path + redisPath)
-    os.system('redis-cli -p %s -a fb123456 flushall' % port1)
+        if 'server_list' in gameConfig.keys():
+            serverList = gameConfig['server_list']
 
-    # 2服清档
-    if port2 != '':
-        os.chdir(server2Path + redisPath)
-        os.system('redis-cli -p %s -a fb123456 flushall' % port2)
+        # 获取 Redis 端口号
+        for server in serverList:
+            ports.append(server['redis_port'])
+
+        if len(serverPaths) == len(ports):
+            for index in range(len(serverPaths)):
+                os.chdir(serverPaths[index] + redisPath)
+                os.system('redis-cli -p %s -a fb123456 flushall' % ports[index])
 
     # 工作路径还原
     os.chdir(localPath)
 
 
-def redisBoost(server1Path, server2Path):
+def redisBoost(serverPaths):
     localPath = os.getcwd()
 
-    # 启动 1 服 Redis
-    os.chdir(server1Path + redisPath)
-    run(redisCommand)
-
-    if server2Path != '':
-        os.chdir(server2Path + redisPath)
-        run(redisCommand)
+    if len(serverPaths) > 0:
+        for path in serverPaths:
+            if os.path.exists(path):
+                # 启动 Redis
+                os.chdir(path + redisPath)
+                run(redisCommand)
 
     # 工作路径还原
     os.chdir(localPath)
 
 
-def serverBoost(server1Path, server2Path):
+def serverBoost(serverPaths):
     localPath = os.getcwd()
 
-    # 启动 1 服 Redis
-    # os.chdir(server1Path + redisPath)
-    # run(redisCommand)
+    if len(serverPaths) > 0:
+        for path in serverPaths:
+            if os.path.exists(path):
+                os.chdir(path + funcPath)
+                run(funcCommand)
 
-    # 启动 2 服 Redis, func, match, chat
-    if server2Path != '':
-        # os.chdir(server2Path + redisPath)
-        # run(redisCommand)
+                os.chdir(path + funcPath)
+                run(matchCommand)
 
-        os.chdir(server2Path + funcPath)
-        run(funcCommand)
+                os.chdir(path + chatPath)
+                run(chatCommand)
 
-        os.chdir(server2Path + funcPath)
-        run(matchCommand)
-
-        os.chdir(server2Path + chatPath)
-        run(chatCommand)
-
-    # 启动 func
-    os.chdir(server1Path + funcPath)
-    run(funcCommand)
-
-    # 启动 match
-    os.chdir(server1Path + funcPath)
-    run(matchCommand)
-
-    # 启动 chat
-    os.chdir(server1Path + chatPath)
-    run(chatCommand)
-
-    # 启动 GM
-    os.chdir(server1Path + toolPath)
-    run(toolCommand)
+        # 启动 GM
+        if os.path.exists(serverPaths[0]):
+            os.chdir(serverPaths[0] + toolPath)
+            run(toolCommand)
 
     # 工作路径还原
     os.chdir(localPath)

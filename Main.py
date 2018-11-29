@@ -14,14 +14,13 @@ class SvnTool(object):
         self.root.title("SvnTool")
         self.root.geometry('380x140')
         self.version = tkinter.IntVar()
-        self.year = tkinter.IntVar()
-        self.month = tkinter.IntVar()
-        self.day = tkinter.IntVar()
+        # self.year = tkinter.IntVar()
+        # self.month = tkinter.IntVar()
+        # self.day = tkinter.IntVar()
         self.configs = {}
+        self.serverPaths = []
         self.assetPath = ''
         self.excelPath = ''
-        self.server1Path = ''
-        self.server2Path = ''
 
         # 选择分支的三个选项
         self.choice1 = tkinter.Radiobutton(self.root, text="主干", variable=self.version, value=1)
@@ -69,13 +68,10 @@ class SvnTool(object):
         try:
             if self.version.get() == 1:
                 self.update(1)
-                # messagebox.showinfo("Done", "更新完成")
             elif self.version.get() == 2:
                 self.update(2)
-                # messagebox.showinfo("Done", "更新完成")
             elif self.version.get() == 3:
                 self.update(3)
-                # messagebox.showinfo("Done", "更新完成")
             else:
                 messagebox.showwarning("Warning", "请先选择一个Branch")
         except Exception as e:
@@ -85,13 +81,10 @@ class SvnTool(object):
         try:
             if self.version.get() == 1:
                 self.revert(1)
-                # messagebox.showinfo("Done", "回退完成")
             elif self.version.get() == 2:
                 self.revert(2)
-                # messagebox.showinfo("Done", "回退完成")
             elif self.version.get() == 3:
                 self.revert(3)
-                # messagebox.showinfo("Done", "回退完成")
             else:
                 messagebox.showwarning("Warning", "请先选择一个Branch！")
         except Exception as e:
@@ -102,13 +95,10 @@ class SvnTool(object):
             SystemUtils.killServerProcess()
             if self.version.get() == 1:
                 self.boost(1)
-                # messagebox.showinfo("Done", "启动成功")
             elif self.version.get() == 2:
                 self.boost(2)
-                # messagebox.showinfo("Done", "启动成功")
             elif self.version.get() == 3:
                 self.boost(3)
-                # messagebox.showinfo("Done", "启动成功")
             else:
                 messagebox.showwarning("Warning", "请先选择一个Branch！")
         except Exception as e:
@@ -154,26 +144,26 @@ class SvnTool(object):
 
     def update(self, version):
         self.getPathFromXML(version)
-        SvnUtils.update(self.assetPath, self.excelPath, self.server1Path, self.server2Path, True)
+        SvnUtils.update(self.assetPath, self.excelPath, self.serverPaths, True)
 
     def revert(self, version):
         flag = messagebox.askyesno("Warning", "确定回退本地的修改吗？")
         if flag:
             self.getPathFromXML(version)
-            SvnUtils.revert(self.assetPath, self.excelPath, self.server1Path, self.server2Path, True)
+            SvnUtils.revert(self.assetPath, self.excelPath, self.serverPaths, True)
 
     def boost(self, version):
         self.getPathFromXML(version)
-        ServerBoost.serverBoost(self.server1Path, self.server2Path)
+        ServerBoost.serverBoost(self.serverPaths)
         pass
 
     def flush(self, version):
         self.getPathFromXML(version)
-        ServerBoost.localFlush(self.server1Path, self.server2Path)
+        ServerBoost.localFlush(self.serverPaths)
 
     def redisBoost(self, version):
         self.getPathFromXML(version)
-        ServerBoost.redisBoost(self.server1Path, self.server2Path)
+        ServerBoost.redisBoost(self.serverPaths)
 
     def getPathFromXML(self, version):
         self.configs = XMLParse.getDictFromXML()
@@ -181,28 +171,22 @@ class SvnTool(object):
         if version == 1:
             if 'trunkAsset' in self.configs.keys():
                 self.assetPath = self.configs['trunkAsset']
-            if 'trunkServer1' in self.configs.keys():
-                self.server1Path = self.configs['trunkServer1']
-            if 'trunkServer2' in self.configs.keys():
-                self.server2Path = self.configs['trunkServer2']
+            if 'trunkServer' in self.configs.keys():
+                self.serverPaths = self.configs['trunkServer']
             if 'trunkExcel' in self.configs.keys():
                 self.excelPath = self.configs['trunkExcel']
         elif version == 2:
             if 'currentAsset' in self.configs.keys():
                 self.assetPath = self.configs['currentAsset']
             if 'currentServer1' in self.configs.keys():
-                self.server1Path = self.configs['currentServer1']
-            if 'currentServer2' in self.configs.keys():
-                self.server2Path = self.configs['currentServer2']
+                self.serverPaths = self.configs['currentServer']
             if 'currentExcel' in self.configs.keys():
                 self.excelPath = self.configs['currentExcel']
         elif version == 3:
             if 'nextAsset' in self.configs.keys():
                 self.assetPath = self.configs['nextAsset']
-            if 'nextServer1' in self.configs.keys():
-                self.server1Path = self.configs['nextServer1']
-            if 'nextServer2' in self.configs.keys():
-                self.server2Path = self.configs['nextServer2']
+            if 'nextServer' in self.configs.keys():
+                self.serverPaths = self.configs['nextServer']
             if 'nextExcel' in self.configs.keys():
                 self.excelPath = self.configs['nextExcel']
         pass
