@@ -32,7 +32,7 @@ class SvnTool(object):
         # 回退按钮
         self.revertButton = tkinter.Button(self.root, text="本地回退", command=self.revertCall)
         # 启动按钮
-        self.boostButton = tkinter.Button(self.root, text="一键启动", command=self.boostCall)
+        self.boostButton = tkinter.Button(self.root, text="一键启服", command=self.boostCall)
         # 清档按钮
         self.flushButton = tkinter.Button(self.root, text="本地清档", command=self.flushCall)
         # 关服按钮
@@ -147,7 +147,7 @@ class SvnTool(object):
         SvnUtils.update(self.assetPath, self.excelPath, self.serverPaths, True)
 
     def revert(self, version):
-        flag = messagebox.askyesno("Warning", "确定回退本地的修改吗？")
+        flag = messagebox.askyesno("Warning", "确定回退本地的所有修改吗？")
         if flag:
             self.getPathFromXML(version)
             SvnUtils.revert(self.assetPath, self.excelPath, self.serverPaths, True)
