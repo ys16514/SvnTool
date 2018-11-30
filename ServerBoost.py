@@ -80,7 +80,7 @@ def serverBoost(serverPaths):
                 os.chdir(path + chatPath)
                 run(chatCommand)
 
-                time.sleep(5)
+                time.sleep(4)
 
         # 启动 GM
         if os.path.exists(serverPaths[0]):

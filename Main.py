@@ -45,12 +45,15 @@ class SvnTool(object):
         # 年份下拉列表
         self.yearCombo = ttk.Combobox(self.root, textvariable=self.year)
         self.yearCombo['value'] = tuple(range(2018, 2101))
+        self.yearCombo.current(0)
         # 月份下拉列表
         self.monthCombo = ttk.Combobox(self.root, textvariable=self.month)
         self.monthCombo['value'] = tuple(range(1, 13))
+        self.monthCombo.current(0)
         # 天数下拉列表
         self.dayCombo = ttk.Combobox(self.root, textvariable=self.day)
         self.dayCombo['value'] = tuple(range(1, 32))
+        self.dayCombo.current(0)
         pass
 
     def elementArrange(self):
