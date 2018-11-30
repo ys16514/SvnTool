@@ -3,6 +3,7 @@
 import os
 import subprocess
 import json
+import time
 
 redisCommand = "redis-server.exe redis.conf --maxheap 200m"
 funcCommand = "node gas_func"
@@ -58,6 +59,8 @@ def redisBoost(serverPaths):
                 os.chdir(path + redisPath)
                 run(redisCommand)
 
+                time.sleep(1)
+
     # 工作路径还原
     os.chdir(localPath)
 
@@ -76,6 +79,8 @@ def serverBoost(serverPaths):
 
                 os.chdir(path + chatPath)
                 run(chatCommand)
+
+                time.sleep(5)
 
         # 启动 GM
         if os.path.exists(serverPaths[0]):

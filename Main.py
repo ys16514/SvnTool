@@ -2,6 +2,7 @@
 # coding=UTF8
 import tkinter
 from tkinter import messagebox
+from tkinter import ttk
 import SvnUtils
 import XMLParse
 import ServerBoost
@@ -14,9 +15,9 @@ class SvnTool(object):
         self.root.title("SvnTool")
         self.root.geometry('380x140')
         self.version = tkinter.IntVar()
-        # self.year = tkinter.IntVar()
-        # self.month = tkinter.IntVar()
-        # self.day = tkinter.IntVar()
+        self.year = tkinter.IntVar()
+        self.month = tkinter.IntVar()
+        self.day = tkinter.IntVar()
         self.configs = {}
         self.serverPaths = []
         self.assetPath = ''
@@ -37,17 +38,19 @@ class SvnTool(object):
         self.flushButton = tkinter.Button(self.root, text="本地清档", command=self.flushCall)
         # 关服按钮
         self.shutButton = tkinter.Button(self.root, text="一键关闭", command=self.shutCall)
-        # 待定按钮
+        # DB按钮
         self.redisButton = tkinter.Button(self.root, text="启动DB", command=self.redisCall)
+        # 穿越按钮
+        self.timeButton = tkinter.Button(self.root, text="穿越", command=self.timeCall)
         # 年份下拉列表
-        # self.yearCombo = ttk.Combobox(self.root, textvariable=self.year)
-        # self.yearCombo['value'] = (2018, 2019, 2020, 2021, 2022)
-        # # 月份下拉列表
-        # self.monthCombo = ttk.Combobox(self.root, textvariable=self.month)
-        # self.monthCombo['value'] = (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12)
-        # # 天数下拉列表
-        # self.dayCombo = ttk.Combobox(self.root, textvariable=self.day)
-        # self.dayCombo['value'] = (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30)
+        self.yearCombo = ttk.Combobox(self.root, textvariable=self.year)
+        self.yearCombo['value'] = tuple(range(2018, 2101))
+        # 月份下拉列表
+        self.monthCombo = ttk.Combobox(self.root, textvariable=self.month)
+        self.monthCombo['value'] = tuple(range(1, 13))
+        # 天数下拉列表
+        self.dayCombo = ttk.Combobox(self.root, textvariable=self.day)
+        self.dayCombo['value'] = tuple(range(1, 32))
         pass
 
     def elementArrange(self):
@@ -60,9 +63,10 @@ class SvnTool(object):
         self.shutButton.grid(row=2, column=3, padx=20)
         self.flushButton.grid(row=3, column=3, padx=20)
         self.redisButton.grid(row=3, column=2, padx=20)
-        # self.yearCombo.grid(row=4, column=1)
-        # self.monthCombo.grid(row=5, column=1)
-        # self.dayCombo.grid(row=6, column=1)
+        self.yearCombo.grid(row=4, column=1)
+        self.monthCombo.grid(row=5, column=1)
+        self.dayCombo.grid(row=6, column=1)
+        self.timeButton.grid(row=7, column=1)
 
     def updateCall(self):
         try:
@@ -139,6 +143,12 @@ class SvnTool(object):
                 self.redisBoost(3)
             else:
                 messagebox.showwarning("Warning", "请先选择一个Branch！")
+        except Exception as e:
+            messagebox.showerror("Error", str(e))
+
+    def timeCall(self):
+        try:
+            SystemUtils.changeDate(self.year.get(), self.month.get(), self.day.get())
         except Exception as e:
             messagebox.showerror("Error", str(e))
 
