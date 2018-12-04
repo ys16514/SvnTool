@@ -110,7 +110,6 @@ class SvnTool(object):
                 messagebox.showwarning("Warning", "请先选择一个Branch！")
         except Exception as e:
             messagebox.showerror("Error", str(e))
-        pass
 
     def flushCall(self):
         flag = messagebox.askyesno("Warning", "确定清档吗？")
@@ -129,11 +128,9 @@ class SvnTool(object):
                     messagebox.showwarning("Warning", "请先选择一个Branch！")
             except Exception as e:
                 messagebox.showerror("Error", str(e))
-        pass
 
     def shutCall(self):
         SystemUtils.killAllProcess()
-        pass
 
     def redisCall(self):
         try:
@@ -168,7 +165,6 @@ class SvnTool(object):
     def boost(self, version):
         self.getPathFromXML(version)
         ServerBoost.serverBoost(self.serverPaths)
-        pass
 
     def flush(self, version):
         self.getPathFromXML(version)
@@ -203,8 +199,6 @@ class SvnTool(object):
             if 'nextExcel' in self.configs.keys():
                 self.excelPath = self.configs['nextExcel']
         pass
-
-    pass
 
 
 def main():

@@ -42,6 +42,7 @@ def localFlush(serverPaths):
             ports.append(server['redis_port'])
 
         if not SystemUtils.isDBOpen(ports):
+            os.chdir(localPath)
             raise Exception("Redis Error!", "Redis ports do not match")
         else:
             if len(serverPaths) == len(ports):
