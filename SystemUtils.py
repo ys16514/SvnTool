@@ -3,6 +3,32 @@ import os, signal
 from datetime import datetime
 
 
+def isDBOpen(ports):
+    pids = psutil.pids()
+    portsList = []
+    result = False
+    for pid in pids:
+        try:
+            if psutil.pid_exists(pid):
+                p = psutil.Process(pid)
+                if p and p.name() == 'redis-server.exe':
+                    portsList.append(p.connections()[0].laddr.port)
+        except psutil.NoSuchProcess:
+            pass
+    if len(portsList) < len(ports):
+        result = False
+    elif len(portsList) >= len(ports):
+        cnt = 0
+        for port in ports:
+            if port in portsList:
+                cnt = cnt + 1
+        if cnt == len(ports):
+            result = True
+    else:
+        result = False
+    return result
+
+
 def killServerProcess():
     pids = psutil.pids()
     for pid in pids:

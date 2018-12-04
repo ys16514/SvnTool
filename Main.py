@@ -15,9 +15,9 @@ class SvnTool(object):
         self.root.title("SvnTool")
         self.root.geometry('380x140')
         self.version = tkinter.IntVar()
-        self.year = tkinter.IntVar()
-        self.month = tkinter.IntVar()
-        self.day = tkinter.IntVar()
+        # self.year = tkinter.IntVar()
+        # self.month = tkinter.IntVar()
+        # self.day = tkinter.IntVar()
         self.configs = {}
         self.serverPaths = []
         self.assetPath = ''
@@ -40,20 +40,20 @@ class SvnTool(object):
         self.shutButton = tkinter.Button(self.root, text="一键关闭", command=self.shutCall)
         # DB按钮
         self.redisButton = tkinter.Button(self.root, text="启动DB", command=self.redisCall)
-        # 穿越按钮
-        self.timeButton = tkinter.Button(self.root, text="穿越", command=self.timeCall)
-        # 年份下拉列表
-        self.yearCombo = ttk.Combobox(self.root, textvariable=self.year)
-        self.yearCombo['value'] = tuple(range(2018, 2101))
-        self.yearCombo.current(0)
-        # 月份下拉列表
-        self.monthCombo = ttk.Combobox(self.root, textvariable=self.month)
-        self.monthCombo['value'] = tuple(range(1, 13))
-        self.monthCombo.current(0)
-        # 天数下拉列表
-        self.dayCombo = ttk.Combobox(self.root, textvariable=self.day)
-        self.dayCombo['value'] = tuple(range(1, 32))
-        self.dayCombo.current(0)
+        # # 穿越按钮
+        # self.timeButton = tkinter.Button(self.root, text="穿越", command=self.timeCall)
+        # # 年份下拉列表
+        # self.yearCombo = ttk.Combobox(self.root, textvariable=self.year)
+        # self.yearCombo['value'] = tuple(range(2018, 2101))
+        # self.yearCombo.current(0)
+        # # 月份下拉列表
+        # self.monthCombo = ttk.Combobox(self.root, textvariable=self.month)
+        # self.monthCombo['value'] = tuple(range(1, 13))
+        # self.monthCombo.current(0)
+        # # 天数下拉列表
+        # self.dayCombo = ttk.Combobox(self.root, textvariable=self.day)
+        # self.dayCombo['value'] = tuple(range(1, 32))
+        # self.dayCombo.current(0)
         pass
 
     def elementArrange(self):
@@ -66,10 +66,10 @@ class SvnTool(object):
         self.shutButton.grid(row=2, column=3, padx=20)
         self.flushButton.grid(row=3, column=3, padx=20)
         self.redisButton.grid(row=3, column=2, padx=20)
-        self.yearCombo.grid(row=4, column=1)
-        self.monthCombo.grid(row=5, column=1)
-        self.dayCombo.grid(row=6, column=1)
-        self.timeButton.grid(row=7, column=1)
+        # self.yearCombo.grid(row=4, column=1)
+        # self.monthCombo.grid(row=5, column=1)
+        # self.dayCombo.grid(row=6, column=1)
+        # self.timeButton.grid(row=7, column=1)
 
     def updateCall(self):
         try:
@@ -149,11 +149,11 @@ class SvnTool(object):
         except Exception as e:
             messagebox.showerror("Error", str(e))
 
-    def timeCall(self):
-        try:
-            SystemUtils.changeDate(self.year.get(), self.month.get(), self.day.get())
-        except Exception as e:
-            messagebox.showerror("Error", str(e))
+    # def timeCall(self):
+    #     try:
+    #         SystemUtils.changeDate(self.year.get(), self.month.get(), self.day.get())
+    #     except Exception as e:
+    #         messagebox.showerror("Error", str(e))
 
     def update(self, version):
         self.getPathFromXML(version)

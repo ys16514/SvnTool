@@ -4,6 +4,7 @@ import os
 import subprocess
 import json
 import time
+import SystemUtils
 
 redisCommand = "redis-server.exe redis.conf --maxheap 200m"
 funcCommand = "node gas_func"
@@ -40,10 +41,13 @@ def localFlush(serverPaths):
         for server in serverList:
             ports.append(server['redis_port'])
 
-        if len(serverPaths) == len(ports):
-            for index in range(len(serverPaths)):
-                os.chdir(serverPaths[index] + redisPath)
-                os.system('redis-cli -p %s -a fb123456 flushall' % ports[index])
+        if not SystemUtils.isDBOpen(ports):
+            raise Exception("Redis Error!", "Redis ports do not match")
+        else:
+            if len(serverPaths) == len(ports):
+                for index in range(len(serverPaths)):
+                    os.chdir(serverPaths[index] + redisPath)
+                    os.system('redis-cli -p %s -a fb123456 flushall' % ports[index])
 
     # 工作路径还原
     os.chdir(localPath)
