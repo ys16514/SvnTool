@@ -2,7 +2,7 @@ import psutil
 import time
 from datetime import datetime
 
-psutil = []
+
 def saveToLog(infoStr):
     with open('error.log', 'a') as f:
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
