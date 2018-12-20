@@ -1,28 +1,13 @@
 import psutil
-import os, signal
+import time
 from datetime import datetime
 
-
+psutil = []
 def saveToLog(infoStr):
     with open('error.log', 'a') as f:
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         f.write(str(now) + ' ' + infoStr + '\n')
         f.close()
-
-
-# def processNum(proName):
-#     count = 0
-#     if isinstance(proName, str):
-#         pids = psutil.pids()
-#         for pid in pids:
-#             try:
-#                 if psutil.pid_exists(pid):
-#                     p = psutil.Process(pid)
-#                     if p and p.name() == proName:
-#                         count = count + 1
-#             except psutil.NoSuchProcess as e:
-#                 continue
-#     return count
 
 
 def isDBOpen(ports):
@@ -37,17 +22,13 @@ def isDBOpen(ports):
                     portsList.append(p.connections()[0].laddr.port)
         except psutil.NoSuchProcess:
             continue
-    if len(portsList) < len(ports):
-        result = False
-    elif len(portsList) >= len(ports):
+    if len(portsList) >= len(ports):
         cnt = 0
         for port in ports:
             if port in portsList:
                 cnt = cnt + 1
         if cnt == len(ports):
             result = True
-    else:
-        result = False
     return result
 
 
@@ -58,58 +39,71 @@ def killProcess(procList):
                 proc.kill()
 
 
-def killServerProcess():
-    pids = psutil.pids()
-    for pid in pids:
-        try:
-            if psutil.pid_exists(pid):
-                p = psutil.Process(pid)
-                if p and p.name() == 'node.exe':
-                    p.terminate()
-        except psutil.NoSuchProcess as e:
-            infoDict = {}
-            infoDict['pids'] = pids
-            infoDict['pid'] = pid
-            infoDict['pidName'] = psutil.Process(pid).name()
-            infoDict['error'] = e
-            saveToLog(str(infoDict))
-            continue
+def getDateFromStamp(timeStamp):
+    try:
+        timeStamp = int(timeStamp)
+        if len(str(timeStamp)) == 10:
+            time_local = time.localtime(timeStamp)
+        elif len(str(timeStamp)) == 13:
+            time_local = time.localtime(int(timeStamp / 1000))
+        else:
+            raise Exception('Time Stamp Error', 'Invalid time stamp')
+        return time.strftime("%Y-%m-%d %H:%M:%S", time_local)
+    except Exception:
+        raise Exception('Time Stamp Error', 'Invalid time stamp')
+
+# def killServerProcess():
+#     pids = psutil.pids()
+#     for pid in pids:
+#         try:
+#             if psutil.pid_exists(pid):
+#                 p = psutil.Process(pid)
+#                 if p and p.name() == 'node.exe':
+#                     p.terminate()
+#         except psutil.NoSuchProcess as e:
+#             infoDict = {}
+#             infoDict['pids'] = pids
+#             infoDict['pid'] = pid
+#             infoDict['pidName'] = psutil.Process(pid).name()
+#             infoDict['error'] = e
+#             saveToLog(str(infoDict))
+#             continue
 
 
-def killDbProcess():
-    pids = psutil.pids()
-    for pid in pids:
-        try:
-            if psutil.pid_exists(pid):
-                p = psutil.Process(pid)
-                if p and p.name() == 'redis-server.exe':
-                    p.terminate()
-        except psutil.AccessDenied:
-            infoDict = {}
-            infoDict['pids'] = pids
-            infoDict['pid'] = pid
-            infoDict['pidName'] = psutil.Process(pid).name()
-            saveToLog(str(infoDict))
-            continue
+# def killDbProcess():
+#     pids = psutil.pids()
+#     for pid in pids:
+#         try:
+#             if psutil.pid_exists(pid):
+#                 p = psutil.Process(pid)
+#                 if p and p.name() == 'redis-server.exe':
+#                     p.terminate()
+#         except psutil.AccessDenied:
+#             infoDict = {}
+#             infoDict['pids'] = pids
+#             infoDict['pid'] = pid
+#             infoDict['pidName'] = psutil.Process(pid).name()
+#             saveToLog(str(infoDict))
+#             continue
 
 
-def killAllProcess():
-    pids = psutil.pids()
-    for pid in pids:
-        try:
-            if psutil.pid_exists(pid):
-                p = psutil.Process(pid)
-                if p:
-                    if p.name() == 'redis-server.exe' or p.name() == 'node.exe':
-                        p.terminate()
-        except psutil.NoSuchProcess as e:
-            infoDict = {}
-            infoDict['pids'] = pids
-            infoDict['pid'] = pid
-            infoDict['pidName'] = psutil.Process(pid).name()
-            infoDict['error'] = e
-            saveToLog(str(infoDict))
-            continue
+# def killAllProcess():
+#     pids = psutil.pids()
+#     for pid in pids:
+#         try:
+#             if psutil.pid_exists(pid):
+#                 p = psutil.Process(pid)
+#                 if p:
+#                     if p.name() == 'redis-server.exe' or p.name() == 'node.exe':
+#                         p.terminate()
+#         except psutil.NoSuchProcess as e:
+#             infoDict = {}
+#             infoDict['pids'] = pids
+#             infoDict['pid'] = pid
+#             infoDict['pidName'] = psutil.Process(pid).name()
+#             infoDict['error'] = e
+#             saveToLog(str(infoDict))
+#             continue
 
 # def isDate(year, month, day):
 #     result = True

@@ -93,14 +93,14 @@ def localFlush(serverPaths):
 
 def redisBoost(serverPaths):
     localPath = os.getcwd()
-
+    procList = []
     try:
         if len(serverPaths) > 0:
             for path in serverPaths:
                 if os.path.exists(path):
                     # 启动 Redis
                     os.chdir(path + redisPath)
-                    run(redisCommand)
+                    procList.append(run(redisCommand))
 
                     time.sleep(1)
     except Exception as e:
@@ -109,7 +109,7 @@ def redisBoost(serverPaths):
 
     # 工作路径还原
     os.chdir(localPath)
-
+    return procList
 
 def serverBoost(serverPaths):
     localPath = os.getcwd()
