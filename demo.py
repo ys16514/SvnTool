@@ -4,6 +4,7 @@
 import tkinter as tk
 from tkinter import ttk
 import datetime
+import psutil
 
 # win = tk.Tk()
 # win.title("Python GUI")    # 添加标题
@@ -78,4 +79,6 @@ import datetime
 #
 # win.mainloop()      # 当调用mainloop()时,窗口才会显示出来
 
-print(datetime.datetime.now())
+# def killAllProcess():
+s = '1-1-1-1'
+print(s.find('--'))

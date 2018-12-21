@@ -50,7 +50,7 @@ class SvnTool(object):
         self.stampButton = tkinter.Button(self.root, text="时间戳转换", command=self.stampCall)
 
         # 时间戳文本框
-        self.stampText = tkinter.Entry(self.root, width=10, textvariable=self.stampStr)
+        self.stampText = tkinter.Entry(self.root, width=15, textvariable=self.stampStr)
         pass
 
     def elementArrange(self):
@@ -71,12 +71,16 @@ class SvnTool(object):
             stamp = self.stampStr.get()
             if stamp is None or stamp == '':
                 messagebox.showinfo("Error", '请输入正确的时间戳')
+            elif stamp.find('-') >= 0:
+                time = SystemUtils.getStampFromDate(stamp)
+                self.stampText.delete(0, 'end')
+                self.stampText.insert(0, time)
             else:
                 time = SystemUtils.getDateFromStamp(stamp)
                 self.stampText.delete(0, 'end')
-                messagebox.showinfo("TimeStamp", time)
+                self.stampText.insert(0, time)
         except Exception as e:
-            self.stampText.delete(0, len(self.stampText.get()))
+            self.stampText.delete(0, 'end')
             messagebox.showerror("Error", str(e))
         pass
 
@@ -190,8 +194,9 @@ class SvnTool(object):
         pass
 
     def closeWindow(self):
-        SystemUtils.killProcess(self.serverProcList + self.dbProcList)
-        SystemUtils.killAllProcess()
+        if len(self.dbProcList) > 0 or len(self.serverProcList):
+            SystemUtils.killProcess(self.serverProcList + self.dbProcList)
+            SystemUtils.killAllProcess()
         self.root.quit()
         pass
 

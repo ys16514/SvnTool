@@ -25,6 +25,12 @@ def getDateFromStamp(timeStamp):
 
 
 def getStampFromDate(date):
+    try:
+        # timeData = date.split('-')
+        timeData = time.strptime(date, "%Y-%m-%d %H:%M:%S")
+        return int(time.mktime(timeData))
+    except Exception:
+        raise Exception('Time Data Error', 'Invalid time data')
     pass
 
 
