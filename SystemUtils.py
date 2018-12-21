@@ -87,23 +87,23 @@ def getDateFromStamp(timeStamp):
 #             continue
 
 
-# def killAllProcess():
-#     pids = psutil.pids()
-#     for pid in pids:
-#         try:
-#             if psutil.pid_exists(pid):
-#                 p = psutil.Process(pid)
-#                 if p:
-#                     if p.name() == 'redis-server.exe' or p.name() == 'node.exe':
-#                         p.terminate()
-#         except psutil.NoSuchProcess as e:
-#             infoDict = {}
-#             infoDict['pids'] = pids
-#             infoDict['pid'] = pid
-#             infoDict['pidName'] = psutil.Process(pid).name()
-#             infoDict['error'] = e
-#             saveToLog(str(infoDict))
-#             continue
+def killAllProcess():
+    pids = psutil.pids()
+    for pid in pids:
+        try:
+            if psutil.pid_exists(pid):
+                p = psutil.Process(pid)
+                if p:
+                    if p.name() == 'redis-server.exe' or p.name() == 'node.exe':
+                        p.terminate()
+        except psutil.NoSuchProcess as e:
+            # infoDict = {}
+            # infoDict['pids'] = pids
+            # infoDict['pid'] = pid
+            # infoDict['pidName'] = psutil.Process(pid).name()
+            # infoDict['error'] = e
+            # saveToLog(str(infoDict))
+            continue
 
 # def isDate(year, month, day):
 #     result = True

@@ -10,19 +10,23 @@ import SystemUtils
 
 class SvnTool(object):
     def __init__(self):
-        self.root = tkinter.Tk()
-        self.root.title("SvnTool")
-        self.root.geometry('380x160')
-        self.version = tkinter.IntVar()
-        self.stampStr = tkinter.StringVar()
-        self.configs = {}
-        self.serverPaths = []
-        self.assetPath = ''
-        self.excelPath = ''
-        self.currentBranch = 0
-        self.nextBranch = 0
-        self.serverProcList = []
-        self.dbProcList = []
+        self.root = tkinter.Tk()                # 定义主窗口
+        self.root.title("SvnTool")              # 主窗口标题
+        self.root.geometry('380x180')           # 主窗口尺寸
+        self.version = tkinter.IntVar()         # 分支值
+        self.stampStr = tkinter.StringVar()     # 时间戳
+        self.configs = {}                       # 路径配置
+        self.serverPaths = []                   # 服务器路径
+        self.assetPath = ''                     # 客户端路径
+        self.excelPath = ''                     # Excel 路径
+        self.redisPath = ''                     # Redis-server.exe 路径
+        self.currentBranch = 0                  # 已操作的分支
+        self.nextBranch = 0                     # 待操作的分支
+        self.serverProcList = []                # 服务器进程列表
+        self.dbProcList = []                    # Redis 进程列表
+
+        # 处理关闭窗口事件
+        self.root.protocol('WM_DELETE_WINDOW', self.closeWindow)
 
         # 选择分支的三个选项
         self.choice1 = tkinter.Radiobutton(self.root, text="主干", variable=self.version, value=1)
@@ -46,6 +50,7 @@ class SvnTool(object):
         # 时间戳按钮
         self.stampButton = tkinter.Button(self.root, text="时间戳转换", command=self.stampCall)
 
+        # 时间戳文本框
         self.stampText = tkinter.Entry(self.root, width=10, textvariable=self.stampStr)
         pass
 
@@ -69,7 +74,7 @@ class SvnTool(object):
                 messagebox.showinfo("Error", '请输入正确的时间戳')
             else:
                 time = SystemUtils.getDateFromStamp(stamp)
-                self.stampText.delete(0, len(self.stampText.get()))
+                self.stampText.delete(0, 'end')
                 messagebox.showinfo("TimeStamp", time)
         except Exception as e:
             self.stampText.delete(0, len(self.stampText.get()))
@@ -120,22 +125,27 @@ class SvnTool(object):
         try:
             branch = self.version.get()
             self.nextBranch = branch
-            if self.currentBranch != 0 and self.currentBranch != self.nextBranch:
-                messagebox.showwarning("Warning", "请确保Branch相同")
-            else:
+            if self.redisPath != '':
                 self.currentBranch = self.nextBranch
-                if branch in (1, 2, 3):
-                    flag = messagebox.askyesno("Warning", "确定清档吗？")
-                    if flag:
-                        self.getPathFromXML(branch)
-                        ports = ServerBoost.getPortsFromPaths(self.serverPaths)
-                        if not SystemUtils.isDBOpen(ports):
-                            messagebox.showwarning("Warning", "请先启动DB！")
-                        else:
-                            ServerBoost.localFlush(self.serverPaths)
-                            messagebox.showinfo("Done", "清档成功")
+                ServerBoost.localFlushAlone(self.redisPath)
+                messagebox.showinfo("Done", "清档成功")
+            else:
+                if self.currentBranch != 0 and self.currentBranch != self.nextBranch:
+                    messagebox.showwarning("Warning", "请确保Branch相同")
                 else:
-                    messagebox.showwarning("Warning", "请先选择一个Branch！")
+                    self.currentBranch = self.nextBranch
+                    if branch in (1, 2, 3):
+                        flag = messagebox.askyesno("Warning", "确定清档吗？")
+                        if flag:
+                            self.getPathFromXML(branch)
+                            ports = ServerBoost.getPortsFromPaths(self.serverPaths)
+                            if not SystemUtils.isDBOpen(ports):
+                                messagebox.showwarning("Warning", "请先启动DB！")
+                            else:
+                                ServerBoost.localFlush(self.serverPaths)
+                                messagebox.showinfo("Done", "清档成功")
+                    else:
+                        messagebox.showwarning("Warning", "请先选择一个Branch！")
         except Exception as e:
             messagebox.showerror("Error", str(e))
 
@@ -146,6 +156,7 @@ class SvnTool(object):
             branch = self.version.get()
             if branch in (1, 2, 3):
                 SystemUtils.killProcess(self.serverProcList + self.dbProcList)
+                SystemUtils.killAllProcess()
                 self.serverProcList = []
                 self.dbProcList = []
             else:
@@ -157,10 +168,14 @@ class SvnTool(object):
         try:
             branch = self.version.get()
             self.currentBranch = branch
+            self.redisPath = ''
             if branch in (1, 2, 3):
                 self.getPathFromXML(branch)
                 SystemUtils.killProcess(self.dbProcList)
-                self.dbProcList = ServerBoost.redisBoost(self.serverPaths)
+                if self.redisPath != '':
+                    self.dbProcList = ServerBoost.redisBoostAlone(self.redisPath)
+                else:
+                    self.dbProcList = ServerBoost.redisBoost(self.serverPaths)
             else:
                 messagebox.showwarning("Warning", "请先选择一个Branch！")
         except Exception as e:
@@ -168,6 +183,9 @@ class SvnTool(object):
 
     def getPathFromXML(self, version):
         self.configs = XMLParse.getDictFromXML()
+
+        if 'redis' in self.configs.keys():
+            self.redisPath = self.configs['redis']
 
         if version == 1:
             if 'trunkAsset' in self.configs.keys():
@@ -192,6 +210,11 @@ class SvnTool(object):
                 self.excelPath = self.configs['nextExcel']
         pass
 
+    def closeWindow(self):
+        SystemUtils.killProcess(self.serverProcList + self.dbProcList)
+        SystemUtils.killAllProcess()
+        self.root.quit()
+        pass
 
 def main():
     tool = SvnTool()

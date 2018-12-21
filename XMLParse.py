@@ -13,6 +13,9 @@ def getDictFromXML():
     nextServerList = []
     for elem1 in tree.iter():
 
+        if elem1.tag == 'redis' and elem1.text is not None:
+            configs['redis'] = elem1.text
+
         if elem1.tag == 'trunkServer':
             for elem2 in elem1.iter():
                 if elem2.tag != 'trunkServer' and elem2.text is not None:

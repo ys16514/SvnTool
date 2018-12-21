@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
+
+    <redis>E:\Fever_Basketball\</redis>
+
     <!-- 主干的路径 -->
     <trunkServer>
         <server1>E:\Fever_Basketball\Trunk\FB_Beta\Server_CHN\</server1>
@@ -23,4 +26,5 @@
     </nextServer>
     <nextAsset>E:\Fever_Basketball\ATM_Branch\Client\Assets\</nextAsset>
     <nextExcel>E:\Fever_Basketball\ATM_Branch\Client\Tool Configer\Excel\</nextExcel>
+
 </config>
