@@ -10,20 +10,19 @@ import SystemUtils
 
 class SvnTool(object):
     def __init__(self):
-        self.root = tkinter.Tk()                # 定义主窗口
-        self.root.title("SvnTool")              # 主窗口标题
-        self.root.geometry('380x180')           # 主窗口尺寸
-        self.version = tkinter.IntVar()         # 分支值
-        self.stampStr = tkinter.StringVar()     # 时间戳
-        self.configs = {}                       # 路径配置
-        self.serverPaths = []                   # 服务器路径
-        self.assetPath = ''                     # 客户端路径
-        self.excelPath = ''                     # Excel 路径
-        self.redisPath = ''                     # Redis-server.exe 路径
-        self.currentBranch = 0                  # 已操作的分支
-        self.nextBranch = 0                     # 待操作的分支
-        self.serverProcList = []                # 服务器进程列表
-        self.dbProcList = []                    # Redis 进程列表
+        self.root = tkinter.Tk()  # 定义主窗口
+        self.root.title("SvnTool")  # 主窗口标题
+        self.root.geometry('380x180')  # 主窗口尺寸
+        self.version = tkinter.IntVar()  # 分支值
+        self.stampStr = tkinter.StringVar()  # 时间戳
+        self.configs = {}  # 路径配置
+        self.serverPaths = []  # 服务器路径
+        self.assetPath = ''  # 客户端路径
+        self.excelPath = ''  # Excel 路径
+        self.currentBranch = 0  # 已操作的分支
+        self.nextBranch = 0  # 待操作的分支
+        self.serverProcList = []  # 服务器进程列表
+        self.dbProcList = []  # Redis 进程列表
 
         # 处理关闭窗口事件
         self.root.protocol('WM_DELETE_WINDOW', self.closeWindow)
@@ -94,13 +93,6 @@ class SvnTool(object):
 
     def revertCall(self):
         try:
-            # branch = self.version.get()
-            # if branch in (1, 2, 3):
-            #     flag = messagebox.askyesno("Warning", "确定回退本地的所有修改吗？")
-            #     if flag:
-            #         self.getPathFromXML(branch)
-            #         SvnUtils.revert(self.assetPath, self.excelPath, self.serverPaths, True)
-            # else:
             messagebox.showwarning("Warning", "请手动回退")
         except Exception as e:
             messagebox.showerror("Error", str(e))
@@ -125,32 +117,26 @@ class SvnTool(object):
         try:
             branch = self.version.get()
             self.nextBranch = branch
-            if self.redisPath != '':
-                self.currentBranch = self.nextBranch
-                ServerBoost.localFlushAlone(self.redisPath)
-                messagebox.showinfo("Done", "清档成功")
+            if self.currentBranch != 0 and self.currentBranch != self.nextBranch:
+                messagebox.showwarning("Warning", "请确保Branch相同")
             else:
-                if self.currentBranch != 0 and self.currentBranch != self.nextBranch:
-                    messagebox.showwarning("Warning", "请确保Branch相同")
+                self.currentBranch = self.nextBranch
+                if branch in (1, 2, 3):
+                    flag = messagebox.askyesno("Warning", "确定清档吗？")
+                    if flag:
+                        self.getPathFromXML(branch)
+                        ports = ServerBoost.getPortsFromPaths(self.serverPaths)
+                        if not SystemUtils.isDBOpen(ports):
+                            messagebox.showwarning("Warning", "请先启动DB！")
+                        else:
+                            ServerBoost.localFlush(self.serverPaths)
+                            messagebox.showinfo("Done", "清档成功")
                 else:
-                    self.currentBranch = self.nextBranch
-                    if branch in (1, 2, 3):
-                        flag = messagebox.askyesno("Warning", "确定清档吗？")
-                        if flag:
-                            self.getPathFromXML(branch)
-                            ports = ServerBoost.getPortsFromPaths(self.serverPaths)
-                            if not SystemUtils.isDBOpen(ports):
-                                messagebox.showwarning("Warning", "请先启动DB！")
-                            else:
-                                ServerBoost.localFlush(self.serverPaths)
-                                messagebox.showinfo("Done", "清档成功")
-                    else:
-                        messagebox.showwarning("Warning", "请先选择一个Branch！")
+                    messagebox.showwarning("Warning", "请先选择一个Branch！")
         except Exception as e:
             messagebox.showerror("Error", str(e))
 
     def shutCall(self):
-
         try:
             self.currentBranch = 0
             branch = self.version.get()
@@ -168,14 +154,10 @@ class SvnTool(object):
         try:
             branch = self.version.get()
             self.currentBranch = branch
-            self.redisPath = ''
             if branch in (1, 2, 3):
                 self.getPathFromXML(branch)
                 SystemUtils.killProcess(self.dbProcList)
-                if self.redisPath != '':
-                    self.dbProcList = ServerBoost.redisBoostAlone(self.redisPath)
-                else:
-                    self.dbProcList = ServerBoost.redisBoost(self.serverPaths)
+                self.dbProcList = ServerBoost.redisBoost(self.serverPaths)
             else:
                 messagebox.showwarning("Warning", "请先选择一个Branch！")
         except Exception as e:
@@ -183,9 +165,6 @@ class SvnTool(object):
 
     def getPathFromXML(self, version):
         self.configs = XMLParse.getDictFromXML()
-
-        if 'redis' in self.configs.keys():
-            self.redisPath = self.configs['redis']
 
         if version == 1:
             if 'trunkAsset' in self.configs.keys():
@@ -215,6 +194,7 @@ class SvnTool(object):
         SystemUtils.killAllProcess()
         self.root.quit()
         pass
+
 
 def main():
     tool = SvnTool()

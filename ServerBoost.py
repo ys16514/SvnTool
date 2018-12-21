@@ -7,7 +7,6 @@ from time import sleep
 import SystemUtils
 
 redisCommand = "redis-server.exe redis.conf --maxheap 200m"
-redisCommandAlone = "redis-server.exe --maxheap 200m"
 funcCommand = "node gas_func"
 matchCommand = "node gas_match"
 chatCommand = "node gas_chat"
@@ -23,7 +22,7 @@ LOCALPATH = os.getcwd()
 
 def run(command):
     try:
-        if command in [redisCommand, redisCommandAlone, funcCommand]:
+        if command in [redisCommand, funcCommand]:
             return subprocess.Popen(command)
         else:
             return subprocess.Popen(command,
@@ -63,26 +62,6 @@ def getPortsFromPaths(serverPaths):
     return ports
 
 
-def localFlushAlone(rPath):
-    localPath = os.getcwd()
-    port = 6379
-    try:
-        if os.path.exists(rPath):
-            os.chdir(rPath)
-            if not os.system('redis-cli -p %s -a fb123456 flushall' % port) == 0:
-                raise Exception("Cmd Error!", "Cannot find redis-cli.exe or incorrect port")
-        else:
-            os.chdir(localPath)
-            raise Exception("Redis Error!", "Path of redis not exist")
-
-    except Exception as e:
-        os.chdir(localPath)
-        raise Exception("Redis Error!", "Error in localFlush() : %s" % str(e))
-
-    # 工作路径还原
-    os.chdir(localPath)
-
-
 def localFlush(serverPaths):
     localPath = os.getcwd()
 
@@ -110,26 +89,6 @@ def localFlush(serverPaths):
 
     # 工作路径还原
     os.chdir(localPath)
-
-
-def redisBoostAlone(redisPath):
-    localPath = os.getcwd()
-    procList = []
-    try:
-        if os.path.exists(redisPath):
-            # 启动 Redis
-            os.chdir(redisPath)
-            procList.append(run(redisCommandAlone))
-        else:
-            os.chdir(localPath)
-            raise Exception("Redis Error!", "Path of redis not exist")
-    except Exception as e:
-        os.chdir(localPath)
-        raise Exception("Redis Error!", "Error in redisBoost() : %s" % str(e))
-
-    # 工作路径还原
-    os.chdir(localPath)
-    return procList
 
 
 def redisBoost(serverPaths):

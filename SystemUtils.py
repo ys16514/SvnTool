@@ -10,35 +10,6 @@ def saveToLog(infoStr):
         f.close()
 
 
-def isDBOpen(ports):
-    pids = psutil.pids()
-    portsList = []
-    result = False
-    for pid in pids:
-        try:
-            if psutil.pid_exists(pid):
-                p = psutil.Process(pid)
-                if p and p.name() == 'redis-server.exe':
-                    portsList.append(p.connections()[0].laddr.port)
-        except psutil.NoSuchProcess:
-            continue
-    if len(portsList) >= len(ports):
-        cnt = 0
-        for port in ports:
-            if port in portsList:
-                cnt = cnt + 1
-        if cnt == len(ports):
-            result = True
-    return result
-
-
-def killProcess(procList):
-    if isinstance(procList, list):
-        if len(procList) > 0:
-            for proc in procList:
-                proc.kill()
-
-
 def getDateFromStamp(timeStamp):
     try:
         timeStamp = int(timeStamp)
@@ -51,6 +22,36 @@ def getDateFromStamp(timeStamp):
         return time.strftime("%Y-%m-%d %H:%M:%S", time_local)
     except Exception:
         raise Exception('Time Stamp Error', 'Invalid time stamp')
+
+
+def getStampFromDate(date):
+    pass
+
+
+def isDBOpen(ports):
+    portsList = []
+    result = False
+    cnt = 0
+    for proc in psutil.process_iter():
+        try:
+            if proc.name() == 'redis-server.exe':
+                portsList.append(proc.connections()[0].laddr.port)
+        except Exception:
+            continue
+    for port in ports:
+        if port in portsList:
+            cnt = cnt + 1
+    if cnt == len(ports) and cnt > 0:
+        result = True
+    return result
+
+
+def killProcess(procList):
+    if isinstance(procList, list):
+        if len(procList) > 0:
+            for proc in procList:
+                proc.kill()
+
 
 # def killServerProcess():
 #     pids = psutil.pids()
@@ -88,50 +89,10 @@ def getDateFromStamp(timeStamp):
 
 
 def killAllProcess():
-    pids = psutil.pids()
-    for pid in pids:
+    for proc in psutil.process_iter():
         try:
-            if psutil.pid_exists(pid):
-                p = psutil.Process(pid)
-                if p:
-                    if p.name() == 'redis-server.exe' or p.name() == 'node.exe':
-                        p.terminate()
-        except psutil.NoSuchProcess as e:
-            # infoDict = {}
-            # infoDict['pids'] = pids
-            # infoDict['pid'] = pid
-            # infoDict['pidName'] = psutil.Process(pid).name()
-            # infoDict['error'] = e
-            # saveToLog(str(infoDict))
+            if proc.name() == 'redis-server.exe' or proc.name() == 'node.exe':
+                proc.terminate()
+        except Exception:
             continue
 
-# def isDate(year, month, day):
-#     result = True
-#     try:
-#         date = datetime.strptime(str(year) + '-' + str(month) + '-' + str(day) + '-' + \
-#                                  '00:00:00',
-#                                  "%Y-%m-%d-%H:%M:%S")
-#     except Exception as e:
-#         result = False
-#     return result
-#
-#
-# def isTime(hour, minute, second):
-#     result = True
-#     try:
-#         time = datetime.strptime('2018-11-30' + \
-#                                  str(hour) + ':' + str(minute) + ':' + str(second),
-#                                  "%Y-%m-%d-%H:%M:%S")
-#     except Exception as e:
-#         result = False
-#     return result
-#
-#
-# def changeDate(year, month, day):
-#     if isDate(year, month, day):
-#         os.system("date %d.%d.%d" % (year, month, day))
-#
-#
-# def changeTime(hour, minute, second):
-#     if isTime(hour, minute, second):
-#         os.system("time %d.%d.%d" % (hour, minute, second))

@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
 
-    <redis>E:\Fever_Basketball\</redis>
-
     <!-- 主干的路径 -->
     <trunkServer>
         <server1>E:\Fever_Basketball\Trunk\FB_Beta\Server_CHN\</server1>
