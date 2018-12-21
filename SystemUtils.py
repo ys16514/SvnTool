@@ -18,10 +18,10 @@ def getDateFromStamp(timeStamp):
         elif len(str(timeStamp)) == 13:
             time_local = time.localtime(int(timeStamp / 1000))
         else:
-            raise Exception('Time Stamp Error', 'Invalid time stamp')
+            raise Exception('Time Stamp Error', '无效的时间戳')
         return time.strftime("%Y-%m-%d %H:%M:%S", time_local)
     except Exception:
-        raise Exception('Time Stamp Error', 'Invalid time stamp')
+        raise Exception('Time Stamp Error', '无效的时间戳')
 
 
 def getStampFromDate(date):
@@ -29,7 +29,7 @@ def getStampFromDate(date):
         timeData = time.strptime(date, "%Y-%m-%d %H:%M:%S")
         return int(time.mktime(timeData))
     except Exception:
-        raise Exception('Time Data Error', 'Invalid time data')
+        raise Exception('Time Data Error', '无效的时间')
     pass
 
 

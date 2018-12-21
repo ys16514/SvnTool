@@ -55,7 +55,7 @@ def getPortsFromPaths(serverPaths):
                 ports.append(server['redis_port'])
     except Exception as e:
         os.chdir(localPath)
-        raise Exception("Config Error!", "Error in getPortsFromPaths() : %s" % str(e))
+        raise Exception("Config Error!", "无法获取端口参数 : %s" % str(e))
 
     os.chdir(localPath)
 
@@ -68,20 +68,15 @@ def localFlush(serverPaths):
     ports = getPortsFromPaths(serverPaths)
 
     try:
-
         if len(ports) > 0:
-            if not SystemUtils.isDBOpen(ports):
-                os.chdir(localPath)
-                raise Exception("Redis Error!", "Redis ports do not match")
-            else:
-                if len(serverPaths) == len(ports):
-                    for index in range(len(serverPaths)):
-                        os.chdir(serverPaths[index] + redisPath)
-                        if not os.system('redis-cli -p %s -a fb123456 flushall' % ports[index]) == 0:
-                            raise Exception("Cmd Error!", "Cannot find redis-cli.exe or incorrect port")
+            if len(serverPaths) == len(ports):
+                for index in range(len(serverPaths)):
+                    os.chdir(serverPaths[index] + redisPath)
+                    if not os.system('redis-cli -p %s -a fb123456 flushall' % ports[index]) == 0:
+                        raise Exception("Cmd Error!", "缺少 redis-cli.exe 文件 或者 端口错误")
         else:
             os.chdir(localPath)
-            raise Exception("Config Error!", "No Ports Configuration")
+            raise Exception("Config Error!", "缺少端口参数")
 
     except Exception as e:
         os.chdir(localPath)
@@ -116,27 +111,24 @@ def serverBoost(serverPaths):
     localPath = os.getcwd()
     procList = []
     try:
-        if not SystemUtils.isDBOpen(getPortsFromPaths(serverPaths)):
-            raise Exception("Redis Error!", "Redis-server is not open")
-        else:
-            if len(serverPaths) > 0:
-                for path in serverPaths:
-                    if os.path.exists(path):
-                        os.chdir(path + funcPath)
-                        procList.append(run(funcCommand))
+        if len(serverPaths) > 0:
+            for path in serverPaths:
+                if os.path.exists(path):
+                    os.chdir(path + funcPath)
+                    procList.append(run(funcCommand))
 
-                        os.chdir(path + funcPath)
-                        procList.append(run(matchCommand))
+                    os.chdir(path + funcPath)
+                    procList.append(run(matchCommand))
 
-                        os.chdir(path + chatPath)
-                        procList.append(run(chatCommand))
+                    os.chdir(path + chatPath)
+                    procList.append(run(chatCommand))
 
-                        sleep(5)
+                    sleep(5)
 
-                # 启动 GM
-                if os.path.exists(serverPaths[0]):
-                    os.chdir(serverPaths[0] + toolPath)
-                    procList.append(run(toolCommand))
+            # 启动 GM
+            if os.path.exists(serverPaths[0]):
+                os.chdir(serverPaths[0] + toolPath)
+                procList.append(run(toolCommand))
 
     except Exception as e:
         os.chdir(localPath)
