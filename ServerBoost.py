@@ -20,16 +20,19 @@ toolPath = 'gm_tool_server\\'
 LOCALPATH = os.getcwd()
 
 
-def run(command):
+def run(command, isHide=False):
     try:
-        if command in [redisCommand, funcCommand]:
-            return subprocess.Popen(command)
+        if isHide:
+            if command in [redisCommand, funcCommand]:
+                return subprocess.Popen(command)
+            else:
+                return subprocess.Popen(command,
+                                        shell=True,
+                                        stdin=subprocess.DEVNULL,
+                                        stdout=subprocess.DEVNULL,
+                                        stderr=subprocess.DEVNULL)
         else:
-            return subprocess.Popen(command,
-                                    shell=True,
-                                    stdin=subprocess.DEVNULL,
-                                    stdout=subprocess.DEVNULL,
-                                    stderr=subprocess.DEVNULL)
+            return subprocess.Popen(command)
     except Exception as e:
         raise Exception("Cmd Error!", "Error in %s : %s" % (command, str(e)))
 
@@ -107,7 +110,7 @@ def redisBoost(serverPaths):
     return procList
 
 
-def serverBoost(serverPaths):
+def serverBoost(serverPaths, isHide):
     localPath = os.getcwd()
     procList = []
     try:
@@ -115,20 +118,20 @@ def serverBoost(serverPaths):
             for path in serverPaths:
                 if os.path.exists(path):
                     os.chdir(path + funcPath)
-                    procList.append(run(funcCommand))
+                    procList.append(run(funcCommand, isHide))
 
                     os.chdir(path + funcPath)
-                    procList.append(run(matchCommand))
+                    procList.append(run(matchCommand, isHide))
 
                     os.chdir(path + chatPath)
-                    procList.append(run(chatCommand))
+                    procList.append(run(chatCommand, isHide))
 
                     sleep(5)
 
             # 启动 GM
             if os.path.exists(serverPaths[0]):
                 os.chdir(serverPaths[0] + toolPath)
-                procList.append(run(toolCommand))
+                procList.append(run(toolCommand, isHide))
 
     except Exception as e:
         os.chdir(localPath)

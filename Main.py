@@ -14,6 +14,7 @@ class SvnTool(object):
         self.root.title("SvnTool")  # 主窗口标题
         self.root.geometry('380x180')  # 主窗口尺寸
         self.version = tkinter.IntVar()  # 分支值
+        self.hide = tkinter.IntVar()  # 分支值
         self.stampStr = tkinter.StringVar()  # 时间戳
         self.configs = {}  # 路径配置
         self.serverPaths = []  # 服务器路径
@@ -31,6 +32,7 @@ class SvnTool(object):
         self.choice1 = tkinter.Radiobutton(self.root, text="主干", variable=self.version, value=1)
         self.choice2 = tkinter.Radiobutton(self.root, text="线上分支", variable=self.version, value=2)
         self.choice3 = tkinter.Radiobutton(self.root, text="提审分支", variable=self.version, value=3)
+        self.choice4 = tkinter.Checkbutton(self.root, text="仅显示func", variable=self.hide, onvalue=2, offvalue=0)
 
         # 更新按钮
         self.updateButton = tkinter.Button(self.root, text="拉取更新", command=self.updateCall)
@@ -65,6 +67,7 @@ class SvnTool(object):
         self.redisButton.grid(row=3, column=2, padx=20)
         self.stampText.grid(row=4, column=0, sticky=tkinter.E, ipadx=20)
         self.stampButton.grid(row=4, column=2, padx=20, pady=10)
+        self.choice4.grid(row=4, column=3)
 
     def stampCall(self):
         try:
@@ -104,6 +107,10 @@ class SvnTool(object):
     def boostCall(self):
         try:
             branch = self.version.get()
+            if self.hide.get() == 2:
+                isHide = True
+            else:
+                isHide = False
             if branch in (1, 2, 3):
                 self.getPathFromXML(branch)
                 ports = ServerBoost.getPortsFromPaths(self.serverPaths)
@@ -111,7 +118,8 @@ class SvnTool(object):
                     messagebox.showwarning("Warning", "请先启动DB！")
                 else:
                     SystemUtils.killProcess(self.serverProcList)
-                    self.serverProcList = ServerBoost.serverBoost(self.serverPaths)
+                    SystemUtils.killServerProcess()
+                    self.serverProcList = ServerBoost.serverBoost(self.serverPaths, isHide)
             else:
                 messagebox.showwarning("Warning", "请先选择一个Branch！")
         except Exception as e:
@@ -194,7 +202,7 @@ class SvnTool(object):
         pass
 
     def closeWindow(self):
-        if len(self.dbProcList) > 0 or len(self.serverProcList):
+        if len(self.dbProcList) > 0 or len(self.serverProcList) > 0:
             SystemUtils.killProcess(self.serverProcList + self.dbProcList)
             SystemUtils.killAllProcess()
         self.root.quit()

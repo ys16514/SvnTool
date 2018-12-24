@@ -3,11 +3,11 @@ import time
 from datetime import datetime
 
 
-def saveToLog(infoStr):
-    with open('error.log', 'a') as f:
-        now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        f.write(str(now) + ' ' + infoStr + '\n')
-        f.close()
+# def saveToLog(infoStr):
+#     with open('error.log', 'a') as f:
+#         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+#         f.write(str(now) + ' ' + infoStr + '\n')
+#         f.close()
 
 
 def getDateFromStamp(timeStamp):
@@ -58,39 +58,13 @@ def killProcess(procList):
                 proc.kill()
 
 
-# def killServerProcess():
-#     pids = psutil.pids()
-#     for pid in pids:
-#         try:
-#             if psutil.pid_exists(pid):
-#                 p = psutil.Process(pid)
-#                 if p and p.name() == 'node.exe':
-#                     p.terminate()
-#         except psutil.NoSuchProcess as e:
-#             infoDict = {}
-#             infoDict['pids'] = pids
-#             infoDict['pid'] = pid
-#             infoDict['pidName'] = psutil.Process(pid).name()
-#             infoDict['error'] = e
-#             saveToLog(str(infoDict))
-#             continue
-
-
-# def killDbProcess():
-#     pids = psutil.pids()
-#     for pid in pids:
-#         try:
-#             if psutil.pid_exists(pid):
-#                 p = psutil.Process(pid)
-#                 if p and p.name() == 'redis-server.exe':
-#                     p.terminate()
-#         except psutil.AccessDenied:
-#             infoDict = {}
-#             infoDict['pids'] = pids
-#             infoDict['pid'] = pid
-#             infoDict['pidName'] = psutil.Process(pid).name()
-#             saveToLog(str(infoDict))
-#             continue
+def killServerProcess():
+    for proc in psutil.process_iter():
+        try:
+            if proc.name() == 'node.exe':
+                proc.terminate()
+        except Exception:
+            continue
 
 
 def killAllProcess():
@@ -100,4 +74,3 @@ def killAllProcess():
                 proc.terminate()
         except Exception:
             continue
-
