@@ -17,38 +17,75 @@ funcPath = 'func_server\\'
 chatPath = 'chat_server\\'
 toolPath = 'gm_tool_server\\'
 
+LOCALPATH = os.getcwd()
+
 
 def run(command):
-    subprocess.Popen(command)
+    try:
+        if command in [redisCommand, funcCommand]:
+            subprocess.Popen(command)
+        else:
+            subprocess.Popen(command,
+                             shell=True,
+                             stdin=subprocess.DEVNULL,
+                             stdout=subprocess.DEVNULL,
+                             stderr=subprocess.DEVNULL)
+    except Exception as e:
+        raise Exception("Cmd Error!", "Error in %s : %s" % (command, str(e)))
 
 
-def localFlush(serverPaths):
+def getPortsFromPaths(serverPaths):
     localPath = os.getcwd()
 
     ports = []
     serverList = []
 
-    if len(serverPaths) > 0 and os.path.exists(serverPaths[0]):
+    try:
+        if len(serverPaths) > 0 and os.path.exists(serverPaths[0]):
 
-        os.chdir(serverPaths[0] + funcPath)
-        with open('GameConfig.json', 'rb') as f:
-            gameConfig = json.load(f)
+            os.chdir(serverPaths[0] + funcPath)
+            with open('GameConfig.json', 'rb') as f:
+                gameConfig = json.load(f)
 
-        if 'server_list' in gameConfig.keys():
-            serverList = gameConfig['server_list']
+            if 'server_list' in gameConfig.keys():
+                serverList = gameConfig['server_list']
 
-        # 获取 Redis 端口号
-        for server in serverList:
-            ports.append(server['redis_port'])
+            # 获取 Redis 端口号
+            for server in serverList:
+                ports.append(server['redis_port'])
+    except Exception as e:
+        os.chdir(localPath)
+        raise Exception("Config Error!", "Error in getPortsFromPaths() : %s" % str(e))
 
-        if not SystemUtils.isDBOpen(ports):
-            os.chdir(localPath)
-            raise Exception("Redis Error!", "Redis ports do not match")
+    os.chdir(localPath)
+
+    return ports
+
+
+def localFlush(serverPaths):
+    localPath = os.getcwd()
+
+    ports = getPortsFromPaths(serverPaths)
+
+    try:
+
+        if len(ports) > 0:
+            if not SystemUtils.isDBOpen(ports):
+                os.chdir(localPath)
+                raise Exception("Redis Error!", "Redis ports do not match")
+            else:
+                if len(serverPaths) == len(ports):
+                    for index in range(len(serverPaths)):
+                        os.chdir(serverPaths[index] + redisPath)
+                        if not os.system('redis-cli -p %s -a fb123456 flushall' % ports[index]) == 0:
+                            raise Exception("Cmd Error!", "error in redis flush")
         else:
-            if len(serverPaths) == len(ports):
-                for index in range(len(serverPaths)):
-                    os.chdir(serverPaths[index] + redisPath)
-                    os.system('redis-cli -p %s -a fb123456 flushall' % ports[index])
+            os.chdir(localPath)
+            raise Exception("Config Error!", "No Ports Configuration")
+
+    except Exception as e:
+        os.chdir(localPath)
+        raise Exception("Redis Error!", "Error in localFlush() : %s" % str(e))
 
     # 工作路径还原
     os.chdir(localPath)
@@ -57,14 +94,18 @@ def localFlush(serverPaths):
 def redisBoost(serverPaths):
     localPath = os.getcwd()
 
-    if len(serverPaths) > 0:
-        for path in serverPaths:
-            if os.path.exists(path):
-                # 启动 Redis
-                os.chdir(path + redisPath)
-                run(redisCommand)
+    try:
+        if len(serverPaths) > 0:
+            for path in serverPaths:
+                if os.path.exists(path):
+                    # 启动 Redis
+                    os.chdir(path + redisPath)
+                    run(redisCommand)
 
-                time.sleep(1)
+                    time.sleep(1)
+    except Exception as e:
+        os.chdir(localPath)
+        raise Exception("Redis Error!", "Error in redisBoost() : %s" % str(e))
 
     # 工作路径还原
     os.chdir(localPath)
@@ -73,24 +114,32 @@ def redisBoost(serverPaths):
 def serverBoost(serverPaths):
     localPath = os.getcwd()
 
-    if len(serverPaths) > 0:
-        for path in serverPaths:
-            if os.path.exists(path):
-                os.chdir(path + funcPath)
-                run(funcCommand)
+    try:
+        if not SystemUtils.isDBOpen(getPortsFromPaths(serverPaths)):
+            raise Exception("Redis Error!", "Redis-server is not open")
+        else:
+            if len(serverPaths) > 0:
+                for path in serverPaths:
+                    if os.path.exists(path):
+                        os.chdir(path + funcPath)
+                        run(funcCommand)
 
-                os.chdir(path + funcPath)
-                run(matchCommand)
+                        os.chdir(path + funcPath)
+                        run(matchCommand)
 
-                os.chdir(path + chatPath)
-                run(chatCommand)
+                        os.chdir(path + chatPath)
+                        run(chatCommand)
 
-                time.sleep(4)
+                        time.sleep(5)
 
-        # 启动 GM
-        if os.path.exists(serverPaths[0]):
-            os.chdir(serverPaths[0] + toolPath)
-            run(toolCommand)
+                # 启动 GM
+                if os.path.exists(serverPaths[0]):
+                    os.chdir(serverPaths[0] + toolPath)
+                    run(toolCommand)
+
+    except Exception as e:
+        os.chdir(localPath)
+        raise Exception("Server Error!", "Error in serverBoost() : %s" % str(e))
 
     # 工作路径还原
     os.chdir(localPath)

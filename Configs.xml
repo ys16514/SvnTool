@@ -1,7 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- 1. 路径结尾的 \ 不能省略 -->
-<!-- 2. 不存在的 server 路径可以删除，如删除：<server2>E:\Fever_Basketball\Trunk\FB_Beta\Server_CHN_2\</server2> -->
-<!-- 3. <...>标签的名称不能修改 -->
 <config>
     <!-- 主干的路径 -->
     <trunkServer>
@@ -13,11 +10,11 @@
 
     <!-- 线上分支的路径 -->
     <currentServer>
-        <server1>E:\Fever_Basketball\DK_Branch\Server_1\</server1>
-        <server2>E:\Fever_Basketball\DK_Branch\Server_2\</server2>
+        <server1>E:\Fever_Basketball\ATM_Branch\Server_1\</server1>
+        <server2>E:\Fever_Basketball\ATM_Branch\Server_2\</server2>
     </currentServer>
-    <currentAsset>E:\Fever_Basketball\DK_Branch\Client\Assets\</currentAsset>
-    <currentExcel>E:\Fever_Basketball\DK_Branch\Client\Tool Configer\Excel\</currentExcel>
+    <currentAsset>E:\Fever_Basketball\ATM_Branch\Client\Assets\</currentAsset>
+    <currentExcel>E:\Fever_Basketball\ATM_Branch\Client\Tool Configer\Excel\</currentExcel>
 
     <!-- 提审分支的路径 -->
     <nextServer>
