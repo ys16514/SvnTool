@@ -23,13 +23,13 @@ LOCALPATH = os.getcwd()
 def run(command):
     try:
         if command in [redisCommand, funcCommand]:
-            subprocess.Popen(command)
+            return subprocess.Popen(command)
         else:
-            subprocess.Popen(command,
-                             shell=True,
-                             stdin=subprocess.DEVNULL,
-                             stdout=subprocess.DEVNULL,
-                             stderr=subprocess.DEVNULL)
+            return subprocess.Popen(command,
+                                    shell=True,
+                                    stdin=subprocess.DEVNULL,
+                                    stdout=subprocess.DEVNULL,
+                                    stderr=subprocess.DEVNULL)
     except Exception as e:
         raise Exception("Cmd Error!", "Error in %s : %s" % (command, str(e)))
 
@@ -113,7 +113,7 @@ def redisBoost(serverPaths):
 
 def serverBoost(serverPaths):
     localPath = os.getcwd()
-
+    procList = []
     try:
         if not SystemUtils.isDBOpen(getPortsFromPaths(serverPaths)):
             raise Exception("Redis Error!", "Redis-server is not open")
@@ -122,20 +122,20 @@ def serverBoost(serverPaths):
                 for path in serverPaths:
                     if os.path.exists(path):
                         os.chdir(path + funcPath)
-                        run(funcCommand)
+                        procList.append(run(funcCommand))
 
                         os.chdir(path + funcPath)
-                        run(matchCommand)
+                        procList.append(run(matchCommand))
 
                         os.chdir(path + chatPath)
-                        run(chatCommand)
+                        procList.append(run(chatCommand))
 
                         time.sleep(5)
 
                 # 启动 GM
                 if os.path.exists(serverPaths[0]):
                     os.chdir(serverPaths[0] + toolPath)
-                    run(toolCommand)
+                    procList.append(run(toolCommand))
 
     except Exception as e:
         os.chdir(localPath)
@@ -143,3 +143,4 @@ def serverBoost(serverPaths):
 
     # 工作路径还原
     os.chdir(localPath)
+    return procList

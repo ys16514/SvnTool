@@ -51,6 +51,13 @@ def isDBOpen(ports):
     return result
 
 
+def killProcess(procList):
+    if isinstance(procList, list):
+        if len(procList) > 0:
+            for proc in procList:
+                proc.kill()
+
+
 def killServerProcess():
     pids = psutil.pids()
     for pid in pids:

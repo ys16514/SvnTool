@@ -20,6 +20,7 @@ class SvnTool(object):
         self.excelPath = ''
         self.currentBranch = 0
         self.nextBranch = 0
+        self.procList = []
 
         # 选择分支的三个选项
         self.choice1 = tkinter.Radiobutton(self.root, text="主干", variable=self.version, value=1)
@@ -118,11 +119,14 @@ class SvnTool(object):
         self.currentBranch = 0
         try:
             if self.version.get() == 1:
-                SystemUtils.killAllProcess()
+                SystemUtils.killProcess(self.procList)
+                self.procList = []
             elif self.version.get() == 2:
-                SystemUtils.killAllProcess()
+                SystemUtils.killProcess(self.procList)
+                self.procList = []
             elif self.version.get() == 3:
-                SystemUtils.killAllProcess()
+                SystemUtils.killProcess(self.procList)
+                self.procList = []
             else:
                 messagebox.showwarning("Warning", "请先选择一个Branch！")
         except Exception as e:
@@ -161,8 +165,8 @@ class SvnTool(object):
         if not SystemUtils.isDBOpen(ports):
             messagebox.showwarning("Warning", "请先启动DB！")
         else:
-            SystemUtils.killServerProcess()
-            ServerBoost.serverBoost(self.serverPaths)
+            SystemUtils.killProcess(self.procList)
+            self.procList = ServerBoost.serverBoost(self.serverPaths)
 
     def flush(self, version):
         self.getPathFromXML(version)
